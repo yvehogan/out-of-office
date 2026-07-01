@@ -1,0 +1,15 @@
+import { Header } from "@/components/dashboard/Header";
+import { ProductsHeader } from "@/components/dashboard/products/ProductsHeader";
+import { ProductsTable } from "@/components/dashboard/products/ProductsTable";
+
+export default function ProductsPage() {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="pl-4">
+      <Header />
+      <ProductsHeader />
+      <ProductsTable />
+      </div>
+    </div>
+  );
+}
