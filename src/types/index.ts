@@ -118,6 +118,8 @@ export interface Product {
   stockStatus: string;
   primaryImageUrl?: string;
   unitsAvailable?: number;
+  unitsSold?: number;
+  publishedAt?: string;
   shortDescription?: string;
   longDescription?: string;
   status?: string;
