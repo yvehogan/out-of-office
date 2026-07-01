@@ -10,8 +10,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Out of Office",
-  description: "Out of Office Tracking System",
+  title: "Out of Office | A Playbook for Bold Leaders",
+  description: "A playbook for young professionals, entrepreneurs, and emerging leaders ready to take bold steps. Unconventional wisdom on how work really works, how life really unfolds, and what it takes to navigate both with clarity, courage and intent.",
 };
 
 export default function RootLayout({
@@ -23,8 +23,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${dmSans.variable} h-full antialiased`}
+      style={{ scrollBehavior: "smooth" }}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col cursor-pointer">
         <QueryProvider>
           {children}
           <Toaster position="top-right" richColors />

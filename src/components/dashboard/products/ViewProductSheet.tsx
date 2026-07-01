@@ -15,13 +15,18 @@ export interface ProductData {
   unitsAvailable?: string | number;
   unitsSold?: string | number;
   publishedAt?: string;
+  createdDate?: string;
   stockStatus?: string;
   shortDescription?: string;
   longDescription?: string;
   categoryName?: string;
   primaryImageUrl?: string;
+  type?: string;
+  variantCount?: number;
+  minVariantPrice?: number | null;
+  maxVariantPrice?: number | null;
   images?: { id: string; url: string }[];
-  catalogueProperties?: { attributeId: string; attributeName: string; values: { id: string; value: string }[] }[];
+  catalogueProperties?: { label: string; value: string; count: number; displayFormat: string; displayOrder: number }[];
 }
 
 interface ViewProductSheetProps {
@@ -41,13 +46,42 @@ function formatDate(dateStr?: string) {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
-function getStockBadge(status?: string) {
+function formatPrice(price?: string | number | null) {
+  if (price == null || price === "") return "—";
+  return `₦${Number(price).toLocaleString()}`;
+}
+
+function StockBadge({ status }: { status?: string }) {
   if (!status) return <span className="text-sm font-semibold text-text-950">—</span>;
+  const s = status.toLowerCase().replace(/[_\s]/g, "");
+  const isIn = s === "instock";
+  const isLow = s === "lowstock";
   return (
-    <span className="inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold bg-green-100 text-green-600">
+    <span
+      className={`inline-flex px-2.5 py-1 rounded-full text-[11px] font-semibold ${
+        isIn
+          ? "bg-green-100 text-green-600"
+          : isLow
+          ? "bg-yellow-100 text-yellow-600"
+          : "bg-red-100 text-red-600"
+      }`}
+    >
       {status}
     </span>
   );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
+      <p className="text-xs text-text-600 mb-1.5">{label}</p>
+      {children}
+    </div>
+  );
+}
+
+function FieldText({ value }: { value: string }) {
+  return <p className="text-sm font-semibold text-text-950">{value}</p>;
 }
 
 export function ViewProductSheet({
@@ -65,6 +99,8 @@ export function ViewProductSheet({
   const { data: productDetail, isLoading } = useProductDetail(initialProduct?.id || "");
   const product = productDetail?.data || initialProduct;
 
+  const isVariable = product?.type === "Variable";
+
   const allImages =
     product?.images && product.images.length > 0
       ? product.images
@@ -72,12 +108,15 @@ export function ViewProductSheet({
       ? [{ id: "primary", url: product.primaryImageUrl }]
       : [];
 
-  const attributeText =
-    product?.catalogueProperties && product.catalogueProperties.length > 0
-      ? product.catalogueProperties
-          .map((p) => `${p.attributeName}: ${p.values.map((v) => v.value).join(", ")}`)
-          .join(" · ")
-      : "None";
+  const dateStr = product?.publishedAt || product?.createdDate;
+
+  const priceDisplay = isVariable
+    ? product?.minVariantPrice != null && product?.maxVariantPrice != null
+      ? product.minVariantPrice === product.maxVariantPrice
+        ? formatPrice(product.minVariantPrice)
+        : `${formatPrice(product.minVariantPrice)} – ${formatPrice(product.maxVariantPrice)}`
+      : formatPrice(product?.price)
+    : formatPrice(product?.price);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -86,7 +125,20 @@ export function ViewProductSheet({
         className="w-[580px] sm:w-[580px] p-0 flex flex-col border-0 rounded-[24px] overflow-hidden right-4! top-4! bottom-4! h-[calc(100vh-32px)]!"
       >
         <SheetHeader className="px-6 pt-5 pb-4 flex flex-row items-center justify-between sticky top-0 bg-white z-10 border-b border-gray-100">
-          <SheetTitle className="text-lg font-bold text-text-950">View Product</SheetTitle>
+          <div>
+            <SheetTitle className="text-lg font-bold text-text-950">View Product</SheetTitle>
+            {product?.type && (
+              <span
+                className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                  isVariable
+                    ? "bg-purple-100 text-purple-700"
+                    : "bg-blue-100 text-blue-700"
+                }`}
+              >
+                {product.type}
+              </span>
+            )}
+          </div>
           <button
             onClick={() => onOpenChange(false)}
             className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-text-600 hover:bg-gray-200 transition-colors"
@@ -129,55 +181,79 @@ export function ViewProductSheet({
                 )}
               </div>
 
-              {/* Details grid */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Product Name</p>
-                  <p className="text-sm font-semibold text-text-950">{product?.name || "—"}</p>
+              {/* --- SIMPLE PRODUCT --- */}
+              {!isVariable && (
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="Product Name"><FieldText value={product?.name || "—"} /></Field>
+                  <Field label="Price"><FieldText value={priceDisplay} /></Field>
+                  <Field label="Category"><FieldText value={product?.categoryName || "—"} /></Field>
+                  <Field label="SKU/Code"><FieldText value={product?.sku || "—"} /></Field>
+                  <Field label="Units Available">
+                    <FieldText value={product?.unitsAvailable != null ? Number(product.unitsAvailable).toLocaleString() : "—"} />
+                  </Field>
+                  <Field label="Stock Status"><StockBadge status={product?.stockStatus} /></Field>
+                  <Field label="Units Sold">
+                    <FieldText value={product?.unitsSold != null ? Number(product.unitsSold).toLocaleString() : "—"} />
+                  </Field>
+                  <Field label="Date Published"><FieldText value={formatDate(dateStr)} /></Field>
+                  {product?.catalogueProperties && product.catalogueProperties.length > 0 && (
+                    <div className="col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
+                      <p className="text-xs text-text-600 mb-2">Properties</p>
+                      <div className="flex flex-wrap gap-2">
+                        {[...product.catalogueProperties]
+                          .sort((a, b) => a.displayOrder - b.displayOrder)
+                          .map((prop) => (
+                            <span key={prop.label} className="bg-white border border-gray-200 rounded-full px-3 py-1 text-xs font-medium text-text-950">
+                              {prop.label}: {prop.value}
+                            </span>
+                          ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Price</p>
-                  <p className="text-sm font-semibold text-text-950">
-                    ₦{product?.price ? Number(product.price).toLocaleString() : "—"}
-                  </p>
-                </div>
+              )}
 
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Category</p>
-                  <p className="text-sm font-semibold text-text-950">{product?.categoryName || "—"}</p>
+              {/* --- VARIABLE PRODUCT --- */}
+              {isVariable && (
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="Product Name"><FieldText value={product?.name || "—"} /></Field>
+                  <Field label="Price Range"><FieldText value={priceDisplay} /></Field>
+                  <Field label="Category"><FieldText value={product?.categoryName || "—"} /></Field>
+                  <Field label="SKU/Code"><FieldText value={product?.sku || "—"} /></Field>
+                  <Field label="Units Available">
+                    <FieldText value={product?.unitsAvailable != null ? Number(product.unitsAvailable).toLocaleString() : "—"} />
+                  </Field>
+                  <Field label="Stock Status"><StockBadge status={product?.stockStatus} /></Field>
+                  <Field label="Units Sold">
+                    <FieldText value={product?.unitsSold != null ? Number(product.unitsSold).toLocaleString() : "—"} />
+                  </Field>
+                  <Field label="Variants">
+                    <FieldText value={product?.variantCount != null ? `${product.variantCount} variant${product.variantCount !== 1 ? "s" : ""}` : "—"} />
+                  </Field>
+                  <Field label="Date Published"><FieldText value={formatDate(dateStr)} /></Field>
+                  {product?.catalogueProperties && product.catalogueProperties.length > 0 && (
+                    <div className="col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
+                      <p className="text-xs text-text-600 mb-3">Variant Options</p>
+                      <div className="space-y-3">
+                        {[...product.catalogueProperties]
+                          .sort((a, b) => a.displayOrder - b.displayOrder)
+                          .map((prop) => (
+                            <div key={prop.label}>
+                              <p className="text-xs font-semibold text-text-700 mb-1.5">{prop.label}</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {[...new Set(prop.value.split(", ").map((v) => v.trim()).filter(Boolean))].map((val) => (
+                                  <span key={val} className="bg-white border border-gray-200 rounded-full px-3 py-1 text-xs font-medium text-text-950">
+                                    {val}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">SKU/Code</p>
-                  <p className="text-sm font-semibold text-text-950">{product?.sku || "—"}</p>
-                </div>
-
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Units Available</p>
-                  <p className="text-sm font-semibold text-text-950">
-                    {product?.unitsAvailable !== undefined ? Number(product.unitsAvailable).toLocaleString() : "—"}
-                  </p>
-                </div>
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Stock Status</p>
-                  {getStockBadge(product?.stockStatus)}
-                </div>
-
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Units Sold</p>
-                  <p className="text-sm font-semibold text-text-950">
-                    {product?.unitsSold !== undefined ? Number(product.unitsSold).toLocaleString() : "—"}
-                  </p>
-                </div>
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Attributes</p>
-                  <p className="text-sm font-semibold text-text-950">{attributeText}</p>
-                </div>
-
-                <div className="bg-[#F7F8FA] p-4 rounded-[16px]">
-                  <p className="text-xs text-text-600 mb-1.5">Date Published</p>
-                  <p className="text-sm font-semibold text-text-950">{formatDate(product?.publishedAt)}</p>
-                </div>
-              </div>
+              )}
 
               {/* Descriptions */}
               <div className="space-y-3">
@@ -187,11 +263,7 @@ export function ViewProductSheet({
                     className="w-full px-5 py-4 flex items-center justify-between"
                   >
                     <span className="text-sm font-semibold text-text-950">Short Description</span>
-                    {isShortDescOpen ? (
-                      <ChevronUp className="w-4 h-4 text-text-600" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-text-600" />
-                    )}
+                    {isShortDescOpen ? <ChevronUp className="w-4 h-4 text-text-600" /> : <ChevronDown className="w-4 h-4 text-text-600" />}
                   </button>
                   {isShortDescOpen && (
                     <div className="px-5 pb-5 text-sm text-text-600 leading-relaxed">
@@ -206,11 +278,7 @@ export function ViewProductSheet({
                     className="w-full px-5 py-4 flex items-center justify-between"
                   >
                     <span className="text-sm font-semibold text-text-950">Long Description</span>
-                    {isLongDescOpen ? (
-                      <ChevronUp className="w-4 h-4 text-text-600" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-text-600" />
-                    )}
+                    {isLongDescOpen ? <ChevronUp className="w-4 h-4 text-text-600" /> : <ChevronDown className="w-4 h-4 text-text-600" />}
                   </button>
                   {isLongDescOpen && (
                     <div className="px-5 pb-5 text-sm text-text-600 leading-relaxed">
@@ -228,7 +296,7 @@ export function ViewProductSheet({
           {mode === "archive" ? (
             <button
               onClick={onUnarchive}
-              className="px-8 py-2.5 rounded-full bg-[#5C00FF] text-white text-sm font-semibold hover:bg-[#5C00FF]/90 transition-colors"
+              className="px-8 py-2.5 rounded-full bg-[#5C00FF] text-white text-sm font-semibold hover:bg-[#00CC8D] hover:text-text-950 transition-colors"
             >
               Unarchive Product
             </button>
@@ -242,7 +310,7 @@ export function ViewProductSheet({
               </button>
               <button
                 onClick={onEdit}
-                className="px-8 py-2.5 rounded-full bg-[#5C00FF] text-white text-sm font-semibold hover:bg-[#5C00FF]/90 transition-colors"
+                className="px-8 py-2.5 rounded-full bg-[#5C00FF] text-white text-sm font-semibold hover:bg-[#00CC8D] hover:text-text-950 transition-colors"
               >
                 Edit Product
               </button>

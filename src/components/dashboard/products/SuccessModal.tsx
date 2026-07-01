@@ -11,7 +11,7 @@ interface SuccessModalProps {
 export function SuccessModal({ open, onOpenChange, onDone, actionType = "publish" }: SuccessModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm rounded-[24px] p-8 text-center flex flex-col items-center justify-center gap-6 [&>button]:hidden">
+      <DialogContent showCloseButton={false} className="max-w-sm rounded-[24px] p-8 text-center flex flex-col items-center justify-center gap-6">
         <div className="w-32 h-32 relative">
           <Image src="/svgs/success.svg" alt="Success" fill className="object-contain" />
         </div>
@@ -23,7 +23,7 @@ export function SuccessModal({ open, onOpenChange, onDone, actionType = "publish
         </div>
         <button
           onClick={onDone}
-          className="w-full rounded-full bg-[#5C00FF] px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-[#5C00FF]/90 mt-2"
+          className="w-full rounded-full bg-[#5C00FF] px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-[#00CC8D] hover:text-text-950 mt-2"
         >
           Done
         </button>

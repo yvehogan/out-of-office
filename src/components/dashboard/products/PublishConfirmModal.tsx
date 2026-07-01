@@ -33,17 +33,17 @@ export function PublishConfirmModal({ open, onOpenChange, onConfirm, isLoading, 
             <div className="flex items-center justify-center gap-4 w-full mt-4">
               <button
                 onClick={() => onOpenChange(false)}
-                className={`w-1/2 rounded-full border bg-transparent px-5 py-3 text-sm font-semibold transition-all ${
+                className={`w-1/2 rounded-full border bg-transparent px-5 py-4 text-sm font-semibold transition-all ${
                   actionType === "save_changes" 
                     ? "border-[#00CC8D] text-[#111827] hover:bg-gray-100" 
-                    : "border-[#00CC8D] text-success-600 hover:bg-success-600/10"
+                    : "border-[#00CC8D] text-text-950 hover:bg-success-600/10"
                 }`}
               >
                 No
               </button>
               <button
                 onClick={onConfirm}
-                className="w-1/2 rounded-full bg-[#5C00FF] px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-[#5C00FF]/90"
+                className="w-1/2 rounded-full bg-[#5C00FF] px-5 py-4 text-sm font-semibold text-white transition-all hover:bg-[#5C00FF]/90"
               >
                 Yes
               </button>

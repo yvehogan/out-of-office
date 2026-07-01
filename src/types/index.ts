@@ -103,9 +103,11 @@ export interface ProductImage {
 }
 
 export interface CatalogueProperty {
-  attributeId: string;
-  attributeName: string;
-  values: { id: string; value: string }[];
+  label: string;
+  value: string;
+  count: number;
+  displayFormat: string;
+  displayOrder: number;
 }
 
 export interface Product {
@@ -114,16 +116,20 @@ export interface Product {
   sku: string;
   categoryName: string;
   price: number;
-  type: string;
+  type: "Simple" | "Variable" | string;
   stockStatus: string;
   primaryImageUrl?: string;
   unitsAvailable?: number;
   unitsSold?: number;
   publishedAt?: string;
+  createdDate?: string;
   shortDescription?: string;
   longDescription?: string;
   status?: string;
   categoryId?: string;
+  variantCount?: number;
+  minVariantPrice?: number | null;
+  maxVariantPrice?: number | null;
   images?: ProductImage[];
   catalogueProperties?: CatalogueProperty[];
 }
