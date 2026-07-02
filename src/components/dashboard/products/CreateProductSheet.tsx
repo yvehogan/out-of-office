@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCategories } from "@/hooks/useCategories";
 import { useAttributes } from "@/hooks/useAttributes";
+import { useProductDetail } from "@/hooks/useProducts";
 import { Product } from "@/types";
 
 interface CreateProductSheetProps {
@@ -33,8 +34,10 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedColours, setSelectedColours] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<{ id: string; url: string }[]>([]);
   const { data: categoryData, isLoading: isLoadingCategories } = useCategories();
   const { data: attributesData } = useAttributes();
+  const { data: productDetail } = useProductDetail(mode === "edit" && open ? (product?.id ?? "") : "");
 
   const [formData, setFormData] = useState<{
     name: string;
@@ -65,10 +68,12 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
         setSelectedSizes([]);
         setSelectedColours([]);
         setImages([]);
+        setExistingImages([]);
         setSelectedAttribute("");
         setIsSizesOpen(false);
         setIsColoursOpen(false);
       } else if (product) {
+        // Seed basic fields immediately; descriptions + images filled once detail loads
         setFormData({
           name: product.name || "",
           shortDescription: product.shortDescription || "",
@@ -77,9 +82,26 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
           unitsAvailable: product.unitsAvailable?.toString() || "",
           categoryId: product.categoryId || "",
         });
+        setImages([]);
+        setExistingImages([]);
       }
     }
   }, [open, mode, product]);
+
+  // Populate descriptions + images once the full product detail is available in edit mode
+  useEffect(() => {
+    if (mode === "edit" && open && productDetail?.data) {
+      const detail = productDetail.data;
+      setFormData(f => ({
+        ...f,
+        shortDescription: detail.shortDescription || f.shortDescription,
+        longDescription: detail.longDescription || f.longDescription,
+      }));
+      setExistingImages(
+        (detail.images ?? []).map(img => ({ id: img.id, url: img.url }))
+      );
+    }
+  }, [productDetail, mode, open]);
 
   const toggleSize = (size: string) => {
     setSelectedSizes((prev) => 
@@ -175,6 +197,22 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
           <div className="space-y-6">
             <div className="space-y-4">
               <div className="flex gap-4 flex-wrap">
+                {/* Existing images (edit mode – URL previews) */}
+                {existingImages.map((img) => (
+                  <div key={img.id} className="w-37.5 h-37.5 border border-gray-200 rounded-[16px] relative overflow-hidden bg-white shadow-sm group">
+                    <Image src={img.url} alt="Product image" fill className="object-cover" />
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-3 z-10">
+                      <div
+                        onClick={() => setExistingImages(prev => prev.filter(i => i.id !== img.id))}
+                        className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-red-500 shadow-sm cursor-pointer"
+                      >
+                        <span className="text-[10px] font-bold">🗑</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* New file uploads */}
                 {images.map((img, idx) => (
                   <div key={idx} className="w-37.5 h-37.5 border border-gray-200 rounded-[16px] relative overflow-hidden bg-white shadow-sm group">
                     <Image src={URL.createObjectURL(img)} alt="Preview" fill className="object-cover" />
