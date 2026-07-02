@@ -133,3 +133,12 @@ export interface Product {
   images?: ProductImage[];
   catalogueProperties?: CatalogueProperty[];
 }
+
+export interface WaitlistEntry {
+  id: string;
+  fullName: string;
+  email: string;
+  countryCode: string;
+  phoneNumber: string;
+  createdDate: string;
+}
