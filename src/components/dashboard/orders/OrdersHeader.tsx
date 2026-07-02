@@ -49,8 +49,8 @@ export function OrdersHeader() {
             <Image
               src={metric.decoration}
               alt=""
-              width={180}
-              height={120}
+              width={110}
+              height={80}
               className="absolute bottom-0 right-0 object-contain pointer-events-none"
             />
           </div>

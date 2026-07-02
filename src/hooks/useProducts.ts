@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { toast } from "sonner";
+import { extractApiError } from "@/lib/utils";
 import { PaginatedApiResponse, Product } from "@/types";
 
 export interface UseProductsOptions {
@@ -57,12 +59,14 @@ export function useCreateProduct() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
+    onError: (error: unknown) => {
+      toast.error(extractApiError(error));
+    },
   });
 }
 
 interface UpdateProductPayload {
   name?: string;
-  sku?: string;
   shortDescription?: string;
   longDescription?: string;
   price?: number;
@@ -82,6 +86,9 @@ export function useUpdateProduct() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productDetail"] });
     },
+    onError: (error: unknown) => {
+      toast.error(extractApiError(error));
+    },
   });
 }
 
@@ -96,6 +103,9 @@ export function useArchiveProduct() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productDetail"] });
+    },
+    onError: (error: unknown) => {
+      toast.error(extractApiError(error));
     },
   });
 }
@@ -112,6 +122,9 @@ export function usePublishProduct() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productDetail"] });
     },
+    onError: (error: unknown) => {
+      toast.error(extractApiError(error));
+    },
   });
 }
 
@@ -126,6 +139,26 @@ export function useUnarchiveProduct() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["productDetail"] });
+    },
+    onError: (error: unknown) => {
+      toast.error(extractApiError(error));
+    },
+  });
+}
+
+interface ProductSummary {
+  totalProducts: number;
+  outOfStockProducts: number;
+}
+
+export function useProductSummary() {
+  return useQuery({
+    queryKey: ["productSummary"],
+    queryFn: async () => {
+      const response = await api.get<{ success: boolean; data: ProductSummary }>(
+        "/dashboard/product-summary"
+      );
+      return response.data.data;
     },
   });
 }

@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { extractApiError } from "@/lib/utils";
 import { ApiResponse, PaginatedApiResponse, OrderHistory, OrderDetail } from "@/types";
-import { AxiosError } from "axios";
 
 interface UpdateOrderStatusPayload {
   orderStatus: string;
@@ -73,9 +73,8 @@ export const useUpdateOrderStatus = () => {
         toast.error(data.message || "Failed to update order status.");
       }
     },
-    onError: (error: AxiosError<{ message?: string }>) => {
-      const message = error.response?.data?.message || error.message || "An error occurred while updating order status.";
-      toast.error(message);
+    onError: (error: unknown) => {
+      toast.error(extractApiError(error));
     },
   });
 };

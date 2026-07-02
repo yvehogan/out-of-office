@@ -20,7 +20,6 @@ interface CreateProductSheetProps {
 
 const INITIAL_FORM_DATA = {
   name: "",
-  sku: "",
   shortDescription: "",
   longDescription: "",
   price: "" as string | number,
@@ -40,13 +39,19 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
 
   const [formData, setFormData] = useState<{
     name: string;
-    sku: string;
     shortDescription: string;
     longDescription: string;
     price: string | number;
     unitsAvailable: string | number;
     categoryId: string;
   }>(INITIAL_FORM_DATA);
+
+  const selectedCategoryName = categoryData?.find(c => c.id === formData.categoryId)?.name ?? "";
+  const isNonVariableCategory = /book|journal/i.test(selectedCategoryName);
+  const productType: "Simple" | "Variable" =
+    isNonVariableCategory || (selectedSizes.length === 0 && selectedColours.length === 0)
+      ? "Simple"
+      : "Variable";
 
   const prevOpenRef = useRef(open);
   // Reset form state when sheet opens (transition from closed → open)
@@ -67,7 +72,6 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
       } else if (product) {
         setFormData({
           name: product.name || "",
-          sku: product.sku || "",
           shortDescription: product.shortDescription || "",
           longDescription: product.longDescription || "",
           price: product.price?.toString() || "",
@@ -104,7 +108,6 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
   const buildFormData = (status: "Draft" | "Published") => {
     const data = new FormData();
     data.append("Name", formData.name);
-    data.append("Sku", formData.sku);
     data.append("ShortDescription", formData.shortDescription);
     data.append("LongDescription", formData.longDescription);
     data.append("Price", formData.price.toString());
@@ -145,11 +148,22 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-[600px] sm:w-[600px] p-0 flex flex-col border-0 rounded-[24px] overflow-hidden !right-4 !top-4 !bottom-4 !h-[calc(100vh-32px)]">
+      <SheetContent side="right" className="w-150 sm:w-150 p-0 flex flex-col border-0 rounded-[24px] overflow-hidden !right-4 !top-4 !bottom-4 !h-[calc(100vh-32px)]">
         <SheetHeader className="px-6 py-4 flex flex-row items-center justify-between sticky top-0 bg-white z-10">
-          <SheetTitle className="text-lg font-bold text-text-900">
-            {mode === "create" ? "Create New Product" : "Edit Product"}
-          </SheetTitle>
+          <div className="flex items-center gap-3">
+            <SheetTitle className="text-lg font-bold text-text-900">
+              {mode === "create" ? "Create New Product" : "Edit Product"}
+            </SheetTitle>
+            <span
+              className={`text-xs font-semibold px-3 py-1 rounded-full transition-all ${
+                productType === "Variable"
+                  ? "bg-purple-100 text-[#5C00FF]"
+                  : "bg-emerald-50 text-[#00CC8D]"
+              }`}
+            >
+              {productType}
+            </span>
+          </div>
           <button
             onClick={() => onOpenChange(false)}
             className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-text-600 hover:bg-gray-200 transition-colors"
@@ -163,7 +177,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
             <div className="space-y-4">
               <div className="flex gap-4 flex-wrap">
                 {images.map((img, idx) => (
-                  <div key={idx} className="w-[150px] h-[150px] border border-gray-200 rounded-[16px] relative overflow-hidden bg-white shadow-sm group">
+                  <div key={idx} className="w-37.5 h-37.5 border border-gray-200 rounded-[16px] relative overflow-hidden bg-white shadow-sm group">
                     <Image src={URL.createObjectURL(img)} alt="Preview" fill className="object-cover" />
                     <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-3 z-10">
                       <div 
@@ -177,14 +191,14 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                 ))}
 
                 {/* Add New Image Placeholder */}
-                <label className="w-[150px] h-[150px] border border-dashed border-[#D8D8D9] rounded-[16px] flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+                <label className="w-37.5 h-37.5 border border-dashed border-[#D8D8D9] rounded-[16px] flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
                   <input type="file" multiple accept="image/*" className="hidden" onChange={handleImageUpload} />
                   <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-[#5C00FF]">
                     <Plus className="w-4 h-4" />
                   </div>
                 </label>
               </div>
-              <p className="text-xs text-text-600 p-3 leading-relaxed max-w-[400px] border border-dashed border-[#D8D8D9] rounded-[16px]">
+              <p className="text-xs text-text-600 p-3 leading-relaxed max-w-100 border border-dashed border-[#D8D8D9] rounded-[16px]">
                 Upload at least 2 images of the product. You can also upload a video. Drag and drop to rearrange the order of your media files. File dimension is 1080 x 1080
               </p>
             </div>
@@ -197,17 +211,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                   type="text"
                   value={formData.name}
                   onChange={e => setFormData(f => ({ ...f, name: e.target.value }))}
-                  className="w-full h-[52px] px-5 rounded-[24px] border border-[#111827] text-sm outline-none transition-all relative bg-transparent"
-                />
-              </div>
-
-              <div className="relative">
-                <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">SKU/Code</label>
-                <input
-                  type="text"
-                  value={formData.sku}
-                  onChange={e => setFormData(f => ({ ...f, sku: e.target.value }))}
-                  className="w-full h-[52px] px-5 rounded-[24px] border border-[#111827] text-sm text-text-950 outline-none relative bg-transparent"
+                  className="w-full h-13 px-5 rounded-[24px] border border-[#111827] text-sm outline-none transition-all relative bg-transparent"
                 />
               </div>
 
@@ -217,7 +221,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                   type="number"
                   value={formData.price}
                   onChange={e => setFormData(f => ({ ...f, price: e.target.value }))}
-                  className="w-full h-[52px] px-5 rounded-[24px] border border-[#111827] text-sm outline-none transition-all relative bg-transparent"
+                  className="w-full h-13 px-5 rounded-[24px] border border-[#111827] text-sm outline-none transition-all relative bg-transparent"
                 />
               </div>
 
@@ -225,22 +229,24 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                 <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Short Description<span className="text-red-500">*</span></label>
                 <textarea
                   rows={4}
+                  maxLength={1000}
                   value={formData.shortDescription}
                   onChange={e => setFormData(f => ({ ...f, shortDescription: e.target.value }))}
                   className="w-full p-5 rounded-[24px] border border-[#111827] text-[14px] leading-relaxed text-text-950 outline-none transition-all resize-none relative bg-transparent"
                 />
-                <span className="absolute bottom-4 right-5 text-[11px] text-[#111827] font-medium z-10">{formData.shortDescription.length}/50</span>
+                <span className="absolute bottom-4 right-5 text-[11px] text-[#111827] font-medium z-10">{formData.shortDescription.length}/1000</span>
               </div>
 
               <div className="relative">
                 <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Long Description<span className="text-red-500">*</span></label>
                 <textarea
                   rows={6}
+                  maxLength={2000}
                   value={formData.longDescription}
                   onChange={e => setFormData(f => ({ ...f, longDescription: e.target.value }))}
                   className="w-full p-5 rounded-[24px] border border-[#111827] text-[14px] leading-relaxed text-text-950 outline-none transition-all resize-none relative bg-transparent"
                 />
-                <span className="absolute bottom-4 right-5 text-[11px] text-[#111827] font-medium z-10">{formData.longDescription.length}/1000</span>
+                <span className="absolute bottom-4 right-5 text-[11px] text-[#111827] font-medium z-10">{formData.longDescription.length}/2000</span>
               </div>
 
               <div className="relative">
@@ -249,14 +255,14 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                   type="number"
                   value={formData.unitsAvailable}
                   onChange={e => setFormData(f => ({ ...f, unitsAvailable: e.target.value }))}
-                  className="w-full h-[55px] px-5 rounded-[24px] border border-[#111827] text-sm outline-none transition-all relative bg-transparent"
+                  className="w-full h-13.75 px-5 rounded-[24px] border border-[#111827] text-sm outline-none transition-all relative bg-transparent"
                 />
               </div>
 
               <div className="relative">
                 <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Category<span className="text-red-500">*</span></label>
                 <Select value={formData.categoryId} onValueChange={(val) => setFormData(f => ({ ...f, categoryId: val as string }))}>
-                  <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
+                  <SelectTrigger className="w-full h-[72px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
                     <SelectValue placeholder={isLoadingCategories ? "Loading..." : "Select"}>
                       {formData.categoryId ? categoryData?.find(c => c.id === formData.categoryId)?.name : undefined}
                     </SelectValue>
@@ -269,10 +275,11 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                 </Select>
               </div>
 
+              {!isNonVariableCategory && (
               <div className="relative">
-                <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Attributes<span className="text-red-500">*</span></label>
+                <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Attributes</label>
                 <Select value={selectedAttribute} onValueChange={(val) => setSelectedAttribute(val || "")}>
-                  <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
+                  <SelectTrigger className="w-full h-[72px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent className="rounded-[16px]">
@@ -282,13 +289,14 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                   </SelectContent>
                 </Select>
               </div>
+              )}
 
               {selectedAttribute && (
                 <div className="space-y-6 animate-in slide-in-from-top-2 fade-in duration-200">
                   <div className="relative">
                     <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Sizes<span className="text-red-500">*</span></label>
                     <div 
-                      className="w-full h-[60px] px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
+                      className="w-full h-[72px] px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
                       onClick={() => setIsSizesOpen(!isSizesOpen)}
                     >
                       <span className={`text-sm font-medium ${selectedSizes.length > 0 ? "text-[#111827]" : "text-[#111827]/50"}`}>
@@ -303,7 +311,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                           const isSelected = selectedSizes.includes(size);
                           return (
                             <div key={size} onClick={() => toggleSize(size)} className="flex items-center gap-4 cursor-pointer group">
-                              <div className="w-5 h-5 rounded-[4px] border-2 border-[#111827] flex items-center justify-center bg-transparent group-hover:border-[#5C00FF] transition-colors">
+                              <div className="w-5 h-5 rounded-lg border-2 border-[#111827] flex items-center justify-center bg-transparent group-hover:border-[#5C00FF] transition-colors">
                                 <CheckIcon className={`w-3.5 h-3.5 text-[#111827] transition-opacity ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-10"}`} />
                               </div>
                               <span className="text-[15px] font-medium text-[#111827]">{size}</span>
@@ -317,7 +325,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                   <div className="relative mt-8">
                     <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Colours<span className="text-red-500">*</span></label>
                     <div 
-                      className="w-full h-[60px] px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
+                      className="w-full h-[72px] px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
                       onClick={() => setIsColoursOpen(!isColoursOpen)}
                     >
                       <span className={`text-sm font-medium ${selectedColours.length > 0 ? "text-[#111827]" : "text-[#111827]/50"}`}>
@@ -332,7 +340,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                           const isSelected = selectedColours.includes(color);
                           return (
                             <div key={color} onClick={() => toggleColour(color)} className="flex items-center gap-4 cursor-pointer group">
-                              <div className="w-5 h-5 rounded-[4px] border-[2px] border-[#111827] flex items-center justify-center bg-transparent group-hover:border-[#5C00FF] transition-colors">
+                              <div className="w-5 h-5 rounded-lg border-2 border-[#111827] flex items-center justify-center bg-transparent group-hover:border-[#5C00FF] transition-colors">
                                 <CheckIcon className={`w-3.5 h-3.5 text-[#111827] transition-opacity ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-10"}`} />
                               </div>
                               <span className="text-[15px] font-medium text-[#111827]">{color}</span>
@@ -351,13 +359,13 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
         <div className="p-4 border-t border-gray-100 bg-white flex gap-4 justify-end">
           <button
             onClick={() => onSaveDraft(buildFormData("Draft"))}
-            className="px-6 py-2.5 rounded-full border border-success-600 text-success-600 bg-transparent text-sm font-semibold transition-all hover:bg-gray-50"
+            className="px-5 py-3 rounded-full border border-success-600 text-text-950 bg-transparent text-sm font-semibold transition-all hover:bg-gray-50"
           >
             Save To Draft
           </button>
           <button
             onClick={() => onPublish(buildFormData("Published"))}
-            className="px-6 py-2.5 rounded-full bg-[#5C00FF] text-white text-sm font-semibold transition-all hover:bg-[#5C00FF]/90 shadow-sm"
+            className="px-5 py-3 rounded-full bg-[#5C00FF] text-white text-sm font-semibold transition-all hover:bg-[#5C00FF]/90 shadow-sm"
           >
             {mode === "create" ? "Publish Product" : "Update Product"}
           </button>

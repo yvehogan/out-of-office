@@ -18,9 +18,8 @@ import {
 import { ProductsPagination } from "./ProductsPagination";
 import { Search } from "lucide-react";
 import { ProductFilterModal } from "./ProductFilterModal";
-
-
-
+import { toast } from "sonner";
+import { extractApiError } from "@/lib/utils";
 import { Product } from "@/types";
 
 const getStatusColor = (status: string) => {
@@ -132,7 +131,6 @@ export function ProductsTable() {
       } else if (actionType === "edit_product" && selectedProduct && pendingFormData) {
         const payload = {
           name: pendingFormData.get("Name") as string,
-          sku: pendingFormData.get("Sku") as string,
           shortDescription: pendingFormData.get("ShortDescription") as string,
           longDescription: pendingFormData.get("LongDescription") as string,
           price: Number(pendingFormData.get("Price")),
@@ -150,7 +148,7 @@ export function ProductsTable() {
       setIsSuccessOpen(true);
       setPendingFormData(null);
     } catch (error) {
-      console.error("Failed to perform product action:", error);
+      toast.error(extractApiError(error));
     } finally {
       setIsPublishing(false);
     }
@@ -229,7 +227,6 @@ export function ProductsTable() {
               <TableHeader className="bg-text-100">
                 <TableRow className="hover:bg-transparent border-b-0">
                   <TableHead className="font-semibold text-text-950 text-xs py-4 rounded-tl-[16px]">Product Details</TableHead>
-                  <TableHead className="font-semibold text-text-950 text-xs py-4">SKU/Code</TableHead>
                   <TableHead className="font-semibold text-text-950 text-xs py-4">Category</TableHead>
                   <TableHead className="font-semibold text-text-950 text-xs py-4">Price</TableHead>
                   <TableHead className="font-semibold text-text-950 text-xs py-4">Product Type</TableHead>
@@ -240,19 +237,19 @@ export function ProductsTable() {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-10 text-text-500">
+                    <TableCell colSpan={6} className="text-center py-10 text-text-500">
                       Loading products...
                     </TableCell>
                   </TableRow>
                 ) : isError ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-10 text-red-500">
+                    <TableCell colSpan={6} className="text-center py-10 text-red-500">
                       Failed to load products.
                     </TableCell>
                   </TableRow>
                 ) : products.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-10 text-text-500">
+                    <TableCell colSpan={6} className="text-center py-10 text-text-500">
                       No products found.
                     </TableCell>
                   </TableRow>
@@ -271,7 +268,6 @@ export function ProductsTable() {
                           <span className="text-sm text-text-900 whitespace-nowrap">{product.name}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-text-600  whitespace-nowrap">{product.sku}</TableCell>
                       <TableCell className="text-sm text-text-600 whitespace-nowrap">{product.categoryName}</TableCell>
                       <TableCell className="text-sm text-text-600 whitespace-nowrap">₦{product.price.toLocaleString()}</TableCell>
                       <TableCell className="text-sm text-text-600 whitespace-nowrap">{product.type}</TableCell>

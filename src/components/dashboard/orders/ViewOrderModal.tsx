@@ -222,7 +222,7 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
               value={selectedStatus} 
               onValueChange={(val) => setSelectedStatus(val || "")}
             >
-              <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
+              <SelectTrigger className="w-full h-[64px] px-5 rounded-[24px] border border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent className="rounded-[16px] w-(--anchor-width) min-w-(--anchor-width)">
