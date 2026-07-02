@@ -5,7 +5,7 @@ import { ProductsTable } from "@/components/dashboard/products/ProductsTable";
 export default function ProductsPage() {
   return (
     <div className="flex flex-col gap-6">
-      <div className="pl-4">
+      <div className="">
       <Header />
       <ProductsHeader />
       <ProductsTable />

@@ -5,7 +5,7 @@ import { OrdersTable } from "@/components/dashboard/orders/OrdersTable";
 export default function OrdersPage() {
   return (
     <div className="flex flex-col gap-6">
-      <div className="pl-4">
+      <div className="">
         <Header />
         <OrdersHeader />
         <OrdersTable />

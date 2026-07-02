@@ -97,11 +97,11 @@ export function OrdersTable() {
   };
 
   return (
-    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-5">
+    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-5 animate-fade-in-up delay-2">
       <div className="flex items-center gap-4 mt-2">
         <button 
           onClick={() => setIsFilterOpen(true)}
-          className="flex items-center gap-2 px-6 py-3 rounded-full border border-gray-200 bg-white text-sm font-semibold text-text-700 hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-6 py-3 rounded-full border border-[#5C00FF] bg-white text-sm font-semibold text-text-950 hover:bg-gray-50 transition-colors"
         >
           <ListFilter className="h-4 w-4" />
           Filter
@@ -129,13 +129,13 @@ export function OrdersTable() {
           <table className="w-full whitespace-nowrap text-left text-sm">
             <thead className="border-b border-gray-200 text-xs font-semibold text-text-600">
               <tr>
-                <th className="px-6 py-5">Order ID</th>
-                <th className="px-6 py-5">Customer Details</th>
-                <th className="px-6 py-5">Date Purchased</th>
-                <th className="px-6 py-5">Amount</th>
-                <th className="px-6 py-5">Payment Status</th>
-                <th className="px-6 py-5">Order Status</th>
-                <th className="px-6 py-5">Action</th>
+                <th className="px-6 py-4">Order ID</th>
+                <th className="px-6 py-4">Customer Details</th>
+                <th className="px-6 py-4">Date Purchased</th>
+                <th className="px-6 py-4">Amount</th>
+                <th className="px-6 py-4">Payment Status</th>
+                <th className="px-6 py-4">Order Status</th>
+                <th className="px-6 py-4">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 bg-white">
@@ -161,7 +161,7 @@ export function OrdersTable() {
                 orders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4 text-text-950">{order.orderNumber}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div className="flex flex-col">
                         <span className="text-text-950">{order.customerName}</span>
                         <span className="text-[11px] text-text-500">{order.customerEmail}</span>
@@ -169,17 +169,17 @@ export function OrdersTable() {
                     </td>
                     <td className="px-6 py-4 text-text-950">{new Date(order.purchasedAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4 text-text-950">₦{order.totalAmount.toLocaleString()}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold ${getPaymentBadge(order.paymentStatus)}`}>
                         {order.paymentStatus}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold ${getStatusBadge(order.orderStatus)}`}>
                         {order.orderStatus}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <button 
                         onClick={() => {
                           setSelectedOrder({

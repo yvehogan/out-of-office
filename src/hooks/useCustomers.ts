@@ -6,11 +6,17 @@ interface GetCustomersParams {
   pageNumber?: number;
   pageSize?: number;
   searchTerm?: string;
+  sortOrder?: "newest" | "oldest";
 }
 
-export const getCustomersFn = async ({ pageNumber = 1, pageSize = 20, searchTerm }: GetCustomersParams = {}) => {
+export const getCustomersFn = async ({ pageNumber = 1, pageSize = 20, searchTerm, sortOrder }: GetCustomersParams = {}) => {
   const response = await api.get<PaginatedApiResponse<Customer>>("customers", {
-    params: { pageNumber, pageSize, ...(searchTerm && { searchTerm }) },
+    params: {
+      pageNumber,
+      pageSize,
+      ...(searchTerm && { searchTerm }),
+      ...(sortOrder && { sortOrder: sortOrder === "newest" ? "desc" : "asc" }),
+    },
   });
   return response.data;
 };

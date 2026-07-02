@@ -35,19 +35,20 @@ export function CustomersTable() {
   const { data, isLoading, isError } = useCustomers({ 
     pageNumber: page, 
     pageSize: 20,
-    searchTerm: debouncedSearch
+    searchTerm: debouncedSearch,
+    sortOrder,
   });
 
   const customers = data?.data || [];
   const pagination = data?.pagination;
 
   return (
-    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-5">
+    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-5 animate-fade-in-up delay-2">
       {/* Controls */}
       <div className="flex items-center gap-4 mt-2">
         <button 
           onClick={() => setSortOrder(prev => prev === "newest" ? "oldest" : "newest")}
-          className="flex items-center gap-2 px-6 py-3 rounded-full border border-gray-200 bg-white text-sm font-semibold text-text-700 hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-6 py-3 rounded-full border border-[#5C00FF] bg-white text-sm font-semibold text-text-950 hover:bg-gray-50 transition-colors"
         >
           <ListFilter className="h-4 w-4" />
           {sortOrder === "newest" ? "Newest First" : "Oldest First"}
@@ -71,11 +72,11 @@ export function CustomersTable() {
           <table className="w-full whitespace-nowrap text-left text-sm">
             <thead className="border-b border-gray-200 text-xs font-semibold text-text-600">
               <tr>
-                <th className="px-6 py-5">Customer Details</th>
-                <th className="px-6 py-5">Date Joined</th>
-                <th className="px-6 py-5">Total Spend</th>
-                <th className="px-6 py-5">Total Orders</th>
-                <th className="px-6 py-5">Action</th>
+                <th className="px-6 py-4">Customer Details</th>
+                <th className="px-6 py-4">Date Joined</th>
+                <th className="px-6 py-4">Total Spend</th>
+                <th className="px-6 py-4">Total Orders</th>
+                <th className="px-6 py-4">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 bg-white">
@@ -100,7 +101,7 @@ export function CustomersTable() {
               ) : (
                 customers.map((customer) => (
                   <tr key={customer.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div className="flex flex-col">
                         <span className="text-text-950">{customer.fullName}</span>
                         <span className="text-[11px] text-text-500">{customer.email}</span>
@@ -111,7 +112,7 @@ export function CustomersTable() {
                     </td>
                     <td className="px-6 py-4 text-text-950">₦{customer.totalSpend.toLocaleString()}</td>
                     <td className="px-6 py-4 text-text-950">{customer.totalOrders}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <button 
                         onClick={() => {
                           setSelectedCustomer(customer);

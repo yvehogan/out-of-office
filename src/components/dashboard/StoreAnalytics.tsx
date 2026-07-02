@@ -110,7 +110,7 @@ export function StoreAnalytics({ data, period, onPeriodChange }: StoreAnalyticsP
   });
 
   return (
-    <div className="w-full bg-text-25 rounded-[24px] px-3 py-4">
+    <div className="w-full bg-text-25 rounded-[24px] px-3 py-4 animate-fade-in">
       <div className=" flex items-center justify-between gap-4">
         <h2 className="text-base font-semibold text-text-950">
           Store Analytics
@@ -148,8 +148,10 @@ export function StoreAnalytics({ data, period, onPeriodChange }: StoreAnalyticsP
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 lg:gap-3 mt-4">
         {formattedMetrics.length > 0 ? (
-          formattedMetrics.map((metric) => (
-            <StoreMetricCard key={metric.title} {...metric} />
+          formattedMetrics.map((metric, i) => (
+            <div key={metric.title} className={`animate-fade-in-up delay-${i + 1}`}>
+              <StoreMetricCard {...metric} />
+            </div>
           ))
         ) : (
           <div className="col-span-full py-8 text-center text-text-500">

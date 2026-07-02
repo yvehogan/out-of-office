@@ -3,7 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Box, ShoppingCart, UsersRound, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
+import { BsFillBoxFill } from "react-icons/bs";
+import { FaCartShopping } from "react-icons/fa6";
+import { MdOutlinePeopleAlt } from "react-icons/md";
 import { useState } from "react";
 import Cookies from "js-cookie";
 
@@ -13,10 +17,10 @@ export function Sidebar() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const navItems = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Products", href: "/dashboard/products", icon: Box },
-    { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
-    { name: "Customers", href: "/dashboard/customers", icon: UsersRound },
+    { name: "Dashboard", href: "/dashboard", icon: TbLayoutDashboardFilled },
+    { name: "Products", href: "/dashboard/products", icon: BsFillBoxFill },
+    { name: "Orders", href: "/dashboard/orders", icon: FaCartShopping },
+    { name: "Customers", href: "/dashboard/customers", icon: MdOutlinePeopleAlt },
   ];
 
   const isActiveRoute = (href: string) => {
@@ -76,16 +80,15 @@ export function Sidebar() {
 
               return (
                 <div key={item.name} className="relative px-3">
-                  {/* Active Indicator on the left edge of sidebar */}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[6px] h-10 bg-[#5C00FF] rounded-r-full z-10" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-[#5C00FF] rounded-r-full z-10" />
                   )}
                   <Link
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
-                    className={`group flex items-center gap-4 rounded-[14px] px-5 py-3.5 text-sm transition-all duration-200 ${
+                    className={`group flex items-center gap-4 rounded-[14px] px-5 py-4 text-sm transition-all duration-200 ${
                       isActive
-                        ? "bg-[#F3ECFF] text-[#5C00FF] font-semibold"
+                        ? "bg-text-100 text-[#5C00FF] font-semibold pl-"
                         : "text-text-700 hover:bg-text-50 hover:text-[#111827]"
                     }`}
                   >
@@ -93,7 +96,6 @@ export function Sidebar() {
                       className={`h-5 w-5 shrink-0 transition-colors ${
                         isActive ? "text-[#5C00FF]" : "text-[#565F73] group-hover:text-[#111827]"
                       }`}
-                      strokeWidth={isActive ? 2.5 : 2}
                     />
                     <span>{item.name}</span>
                   </Link>

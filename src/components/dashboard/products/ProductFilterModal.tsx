@@ -65,7 +65,7 @@ export function ProductFilterModal({ initialFilters, onApply }: ProductFilterMod
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="flex items-center gap-2 rounded-full border border-[#5700FF] bg-white px-5 py-2.5 text-xs font-semibold text-text-950 transition-all hover:bg-[#F3ECFF] w-full sm:w-auto justify-center">
-        <ListFilter className="h-5 w-5 text-[#5700FF]" strokeWidth={2.5} />
+        <ListFilter className="h-5 w-5 text-text-950" strokeWidth={2.5} />
         <span>Filter</span>
         {(initialFilters?.categories.length || initialFilters?.stockStatuses.length) ? (
           <span className="ml-1 w-2 h-2 rounded-full bg-[#5C00FF]" />

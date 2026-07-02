@@ -23,7 +23,7 @@ export function TopSellingCategories({ data, period, onPeriodChange }: TopSellin
   }));
 
   return (
-    <div className="bg-white rounded-[24px] border border-[#EEF1F6] p-6 lg:p-4 flex flex-col h-[520px] w-full lg:w-[380px] shrink-0">
+    <div className="bg-white rounded-[24px] border border-[#EEF1F6] p-6 lg:p-4 flex flex-col h-[520px] w-full lg:w-[380px] shrink-0 animate-fade-in-up delay-4">
       {/* Header */}
       <div className="flex items-center justify-between gap-4 mb-2">
         <h3 className="text-base font-semibold tracking-tight text-text-950">

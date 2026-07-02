@@ -120,7 +120,7 @@ export function OrdersFilterModal({ open, onOpenChange, onApply, initialFilters 
                   className="flex items-center gap-3 cursor-pointer group"
                   onClick={(e) => { e.preventDefault(); toggleSelection(status, selectedOrderStatus, setSelectedOrderStatus); }}
                 >
-                  <div className={`w-5 h-5 rounded-[4px] border flex items-center justify-center transition-colors ${selectedOrderStatus.includes(status) ? 'border-[#111827] bg-[#111827]' : 'border-gray-300 bg-white group-hover:border-[#111827]'}`}>
+                  <div className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-colors ${selectedOrderStatus.includes(status) ? 'border-[#111827] bg-[#111827]' : 'border-gray-300 bg-white group-hover:border-[#111827]'}`}>
                     {selectedOrderStatus.includes(status) && (
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10 3L4.5 8.5L2 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

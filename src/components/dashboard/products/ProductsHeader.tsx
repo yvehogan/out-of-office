@@ -20,10 +20,10 @@ export function ProductsHeader() {
     <div className="flex flex-col gap-6 pt-4">
       <div className="bg-text-25 rounded-[24px] px-3 py-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {metrics.map((metric) => (
+        {metrics.map((metric, i) => (
           <div
             key={metric.title}
-            className="relative bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden min-h-[160px] flex flex-col justify-between p-6"
+            className={`relative bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden min-h-[160px] flex flex-col justify-between p-6 animate-fade-in-up delay-${i + 1}`}
           >
             <Image
               src={metric.icon}

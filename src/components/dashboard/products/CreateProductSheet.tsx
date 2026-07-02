@@ -256,7 +256,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
               <div className="relative">
                 <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Category<span className="text-red-500">*</span></label>
                 <Select value={formData.categoryId} onValueChange={(val) => setFormData(f => ({ ...f, categoryId: val as string }))}>
-                  <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border-[#111827] focus:ring-[#5C00FF] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
+                  <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
                     <SelectValue placeholder={isLoadingCategories ? "Loading..." : "Select"}>
                       {formData.categoryId ? categoryData?.find(c => c.id === formData.categoryId)?.name : undefined}
                     </SelectValue>
@@ -272,7 +272,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
               <div className="relative">
                 <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Attributes<span className="text-red-500">*</span></label>
                 <Select value={selectedAttribute} onValueChange={(val) => setSelectedAttribute(val || "")}>
-                  <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border-[#111827] focus:ring-[#5C00FF] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
+                  <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent className="rounded-[16px]">

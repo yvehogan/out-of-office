@@ -146,12 +146,12 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
               <table className="w-full whitespace-nowrap text-left text-sm scrollbar-hidden">
                 <thead className="bg-white border-b border-gray-100 text-xs font-semibold text-text-950">
                   <tr>
-                    <th className="px-6 py-4">S/N</th>
-                    <th className="px-6 py-4">Product Details</th>
-                    <th className="px-6 py-4">SKU/Code</th>
-                    <th className="px-6 py-4">Options</th>
-                    <th className="px-6 py-4">Quantity</th>
-                    <th className="px-6 py-4">Price</th>
+                    <th className="px-6 py-3">S/N</th>
+                    <th className="px-6 py-3">Product Details</th>
+                    <th className="px-6 py-3">SKU/Code</th>
+                    <th className="px-6 py-3">Options</th>
+                    <th className="px-6 py-3">Quantity</th>
+                    <th className="px-6 py-3">Price</th>
                     <th className="px-6 py-4 text-right">Subtotal</th>
                   </tr>
                 </thead>
@@ -176,8 +176,8 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
 
                       return (
                         <tr key={item.id || index} className="text-xs text-text-950">
-                          <td className="px-6 py-4">{index + 1 < 10 ? `0${index + 1}` : index + 1}</td>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-3">{index + 1 < 10 ? `0${index + 1}` : index + 1}</td>
+                          <td className="px-6 py-3">
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-md border border-gray-100 overflow-hidden relative bg-gray-50 flex-shrink-0">
                                 <Image src={"/images/product1.png"} alt={item.productName || "Product"} fill className="object-cover" />
@@ -185,8 +185,8 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
                               <span className="font-medium">{item.productName}</span>
                             </div>
                           </td>
-                          <td className="px-6 py-4">{item.productSku || "-"}</td>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-3">{item.productSku || "-"}</td>
+                          <td className="px-6 py-3">
                             {parsedOptions.length > 0 ? (
                               <div className="flex gap-2">
                                 {parsedOptions.map(opt => (
@@ -199,8 +199,8 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
                               <span className="bg-gray-100 rounded-full px-2 py-1 text-[10px] text-text-900 font-medium">-</span>
                             )}
                           </td>
-                          <td className="px-6 py-4">{item.quantity}</td>
-                          <td className="px-6 py-4">₦{(item.unitPrice || 0).toLocaleString()}</td>
+                          <td className="px-6 py-3">{item.quantity}</td>
+                          <td className="px-6 py-3">₦{(item.unitPrice || 0).toLocaleString()}</td>
                           <td className="px-6 py-4 text-right">₦{(item.subtotal || 0).toLocaleString()}</td>
                         </tr>
                       );
@@ -222,7 +222,7 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
               value={selectedStatus} 
               onValueChange={(val) => setSelectedStatus(val || "")}
             >
-              <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border border-[#111827] focus:ring-[#5C00FF] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
+              <SelectTrigger className="w-full h-[60px] px-5 rounded-[24px] border border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent className="rounded-[16px] w-(--anchor-width) min-w-(--anchor-width)">

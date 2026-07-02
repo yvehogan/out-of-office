@@ -4,9 +4,8 @@ import { CustomersTable } from "@/components/dashboard/customers/CustomersTable"
 export default function CustomersPage() {
   return (
     <div className="flex flex-col gap-6">
-      <div className="pl-4">
+      <div className="">
         <Header />
-        {/* <CustomersHeader /> */}
         <CustomersTable />
       </div>
     </div>

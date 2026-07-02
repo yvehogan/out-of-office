@@ -157,7 +157,7 @@ export function ProductsTable() {
   };
 
   return (
-    <div className="w-full flex flex-col bg-white mt-5 p-5 rounded-[24px]">
+    <div className="w-full flex flex-col bg-white mt-5 p-5 rounded-[24px] animate-fade-in-up delay-2">
        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-5">
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         <ProductFilterModal 
@@ -176,7 +176,7 @@ export function ProductsTable() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2.5 rounded-full border border-text-950 text-sm focus:ring-[#5C00FF] focus:border-[#5C00FF] transition-colors"
+            className="block w-full pl-10 pr-4 py-2.5 rounded-full border border-text-950 text-sm outline-none transition-colors"
             placeholder="Search products by title or SKU..."
           />
         </div>
@@ -202,22 +202,22 @@ export function ProductsTable() {
         }} 
         className="w-full"
       >
-        <TabsList variant="line" className="bg-transparent w-full justify-start rounded-none h-auto p-0 flex gap-8 relative border-b border-[#EEF1F6] mb-6">
+        <TabsList variant="line" className="bg-transparent w-full justify-start rounded-none h-auto p-0 flex gap-8 relative px-6 -mb-2 mt-5">
           <TabsTrigger
             value="published"
-            className="flex-none relative rounded-none border-none data-[active]:text-[#111827] text-[#565F73] hover:text-[#111827] font-medium data-[active]:font-semibold text-[14px] pb-3 px-0 bg-transparent data-[active]:bg-transparent data-[active]:shadow-none transition-all after:!h-[2px] after:!bg-[#111827] after:!rounded-none cursor-pointer"
+            className="flex-none relative rounded-none border-none data-active:text-text-950 text-[#565F73] hover:text-[#5C00FF] font-medium data-active:font-semibold text-[14px] pb-3 px-0 bg-transparent data-active:bg-transparent data-active:shadow-none transition-all after:h-1! after:rounded-t-[10px]! after:!bg-[#5C00FF] after:!bottom-0 cursor-pointer"
           >
             Published Products
           </TabsTrigger>
           <TabsTrigger
             value="draft"
-            className="flex-none relative rounded-none border-none data-[active]:text-[#111827] text-[#565F73] hover:text-[#111827] font-medium data-[active]:font-semibold text-[14px] pb-3 px-0 bg-transparent data-[active]:bg-transparent data-[active]:shadow-none transition-all after:!h-[2px] after:!bg-[#111827] after:!rounded-none cursor-pointer"
+            className="flex-none relative rounded-none border-none data-active:text-text-950 text-[#565F73] hover:text-[#5C00FF] font-medium data-active:font-semibold text-[14px] pb-3 px-0 bg-transparent data-active:bg-transparent data-active:shadow-none transition-all after:h-1! after:rounded-t-[10px]! after:!bg-[#5C00FF] after:!bottom-0 cursor-pointer"
           >
             Draft
           </TabsTrigger>
           <TabsTrigger
             value="archive"
-            className="flex-none relative rounded-none border-none data-[active]:text-[#111827] text-[#565F73] hover:text-[#111827] font-medium data-[active]:font-semibold text-[14px] pb-3 px-0 bg-transparent data-[active]:bg-transparent data-[active]:shadow-none transition-all after:!h-[2px] after:!bg-[#111827] after:!rounded-none cursor-pointer"
+            className="flex-none relative rounded-none border-none data-active:text-text-950 text-[#565F73] hover:text-[#5C00FF] font-medium data-active:font-semibold text-[14px] pb-3 px-0 bg-transparent data-active:bg-transparent data-active:shadow-none transition-all after:h-1! after:rounded-t-[10px]! after:!bg-[#5C00FF] after:!bottom-0 cursor-pointer"
           >
             Archive
           </TabsTrigger>
@@ -225,16 +225,16 @@ export function ProductsTable() {
 
         <div className=" bg-white rounded-[16px] border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto w-full">
-            <Table className="min-w-[800px]">
+            <Table className="min-w-200">
               <TableHeader className="bg-text-100">
                 <TableRow className="hover:bg-transparent border-b-0">
-                  <TableHead className="font-semibold text-text-950 text-xs py-5 rounded-tl-[16px]">Product Details</TableHead>
-                  <TableHead className="font-semibold text-text-950 text-xs py-5">SKU/Code</TableHead>
-                  <TableHead className="font-semibold text-text-950 text-xs py-5">Category</TableHead>
-                  <TableHead className="font-semibold text-text-950 text-xs py-5">Price</TableHead>
-                  <TableHead className="font-semibold text-text-950 text-xs py-5">Product Type</TableHead>
-                  <TableHead className="font-semibold text-text-950 text-xs py-5">Stock Status</TableHead>
-                  <TableHead className="font-semibold text-text-950 text-xs py-5 rounded-tr-[16px]">Action</TableHead>
+                  <TableHead className="font-semibold text-text-950 text-xs py-4 rounded-tl-[16px]">Product Details</TableHead>
+                  <TableHead className="font-semibold text-text-950 text-xs py-4">SKU/Code</TableHead>
+                  <TableHead className="font-semibold text-text-950 text-xs py-4">Category</TableHead>
+                  <TableHead className="font-semibold text-text-950 text-xs py-4">Price</TableHead>
+                  <TableHead className="font-semibold text-text-950 text-xs py-4">Product Type</TableHead>
+                  <TableHead className="font-semibold text-text-950 text-xs py-4">Stock Status</TableHead>
+                  <TableHead className="font-semibold text-text-950 text-xs py-4 rounded-tr-[16px]">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -259,7 +259,7 @@ export function ProductsTable() {
                 ) : (
                   products.map((product) => (
                     <TableRow key={product.id} className="hover:bg-gray-50/50 border-gray-100">
-                      <TableCell className="py-2">
+                      <TableCell className="py-1">
                         <div className="flex items-center gap-3">
                           <div className="h-[56px] w-[40px] bg-gray-100 rounded-sm shrink-0 flex items-center justify-center overflow-hidden shadow-sm">
                             {product.primaryImageUrl ? (
