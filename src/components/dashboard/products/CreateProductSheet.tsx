@@ -6,7 +6,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCategories } from "@/hooks/useCategories";
 import { useAttributes } from "@/hooks/useAttributes";
-
 import { Product } from "@/types";
 
 interface CreateProductSheetProps {
@@ -263,8 +262,8 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                 <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Category<span className="text-red-500">*</span></label>
                 <Select value={formData.categoryId} onValueChange={(val) => setFormData(f => ({ ...f, categoryId: val as string }))}>
                   <SelectTrigger className="w-full h-[72px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
-                    <SelectValue placeholder={isLoadingCategories ? "Loading..." : "Select"}>
-                      {formData.categoryId ? categoryData?.find(c => c.id === formData.categoryId)?.name : undefined}
+                    <SelectValue placeholder={isLoadingCategories ? "Loading..." : "Select a category"}>
+                      {(value: string | null) => value ? (categoryData?.find(c => c.id === value)?.name ?? value) : null}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent className="rounded-[16px]">
@@ -279,7 +278,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
               <div className="relative">
                 <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Attributes</label>
                 <Select value={selectedAttribute} onValueChange={(val) => setSelectedAttribute(val || "")}>
-                  <SelectTrigger className="w-full h-[72px] px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
+                  <SelectTrigger className="w-full h-18 px-5 rounded-[24px] border-[#111827] outline-none shadow-none text-sm text-[#111827] relative bg-transparent">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent className="rounded-[16px]">
@@ -296,7 +295,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
                   <div className="relative">
                     <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Sizes<span className="text-red-500">*</span></label>
                     <div 
-                      className="w-full h-[72px] px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
+                      className="w-full h-18 px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
                       onClick={() => setIsSizesOpen(!isSizesOpen)}
                     >
                       <span className={`text-sm font-medium ${selectedSizes.length > 0 ? "text-[#111827]" : "text-[#111827]/50"}`}>
