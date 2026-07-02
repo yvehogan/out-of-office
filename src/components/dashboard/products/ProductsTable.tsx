@@ -24,10 +24,13 @@ import { Product } from "@/types";
 
 const getStatusColor = (status: string) => {
   switch (status) {
+    case "InStock":
     case "In Stock":
       return "bg-[#D1FADF] text-[#039855]";
+    case "LowStock":
     case "Low Stock":
       return "bg-[#FEF0C7] text-[#DC6803]";
+    case "OutOfStock":
     case "Out of Stock":
       return "bg-[#E4E7EC] text-[#0C111D]";
     default:
