@@ -58,10 +58,10 @@ export function Header() {
         </h1>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
         <NotificationsSheet />
 
-        <span className="text-sm font-bold text-[#24262D]">
+        <span className="hidden sm:inline text-sm font-bold text-[#24262D] whitespace-nowrap">
           Hello, {userName}
         </span>
       </div>

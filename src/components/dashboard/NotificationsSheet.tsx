@@ -69,7 +69,7 @@ export function NotificationsSheet() {
           className="object-contain"
         />
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[540px] bg-[#F6F7F9] p-0 flex flex-col border-none shadow-2xl m-4 h-[calc(100vh-32px)] rounded-[16px]">
+      <SheetContent className="left-4! right-4! w-auto! h-[calc(100vh-2rem)]! sm:left-auto! sm:right-4! sm:w-[540px]! sm:h-[calc(100vh-32px)]! bg-[#F6F7F9] p-0 flex flex-col border-none shadow-2xl rounded-[16px]">
         <div className="py-2 px-3 pb-4">
           <SheetHeader className="mb-6 flex flex-row items-center justify-between space-y-0">
             <SheetTitle className="text-lg font-semibold text-text-950">

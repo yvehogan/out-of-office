@@ -158,7 +158,7 @@ export function ProductsTable() {
   };
 
   return (
-    <div className="w-full flex flex-col bg-white mt-5 p-5 rounded-[24px] animate-fade-in-up delay-2">
+    <div className="w-full flex flex-col bg-white mt-5 p-4 sm:p-5 rounded-[24px] animate-fade-in-up delay-2">
        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-5">
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         <ProductFilterModal 

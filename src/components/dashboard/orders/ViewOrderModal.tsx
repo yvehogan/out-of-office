@@ -61,9 +61,9 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" showCloseButton={false} className="max-w-[700px]! w-[95vw] sm:w-[700px] p-0 flex flex-col border-0 rounded-[24px] overflow-hidden !right-4 !top-4 !bottom-4 !h-[calc(100vh-32px)]">
+      <SheetContent side="right" showCloseButton={false} className="w-full sm:max-w-175! sm:w-175 p-0 flex flex-col border-0 rounded-none sm:rounded-[24px] overflow-hidden sm:right-4! sm:top-4! sm:bottom-4! sm:h-[calc(100vh-32px)]!">
         <SheetTitle className="sr-only">View Order</SheetTitle>
-        <div className="bg-white rounded-[24px] flex flex-col flex-1 h-full overflow-y-auto scrollbar-hidden p-8 shadow-xl">
+        <div className="bg-white rounded-[24px] flex flex-col flex-1 h-full overflow-y-auto scrollbar-hidden p-4 sm:p-8 shadow-xl">
           <div className="flex items-center justify-between mb-8 mt-2">
             <h2 className="text-lg font-semibold text-text-900">View Order</h2>
             <button
@@ -74,37 +74,35 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
             </button>
           </div>
 
-          <div className="grid grid-cols-6 gap-4 mb-8">
-            {/* Row 1: 3 items */}
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-2">
+          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 mb-8">
+            {/* Order ID — full width on mobile (ID string is long) */}
+            <div className="bg-text-100 rounded-[16px] p-3 col-span-2 sm:col-span-2">
               <p className="text-xs text-text-950 mb-1">Order ID</p>
-              <p className="text-sm text-text-950">{orderDetailData?.data?.orderNumber || order?.id || "-"}</p>
+              <p className="text-sm text-text-950 break-all">{orderDetailData?.data?.orderNumber || order?.id || "-"}</p>
             </div>
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-2">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-2">
               <p className="text-xs text-text-950 mb-1">Date Purchased</p>
               <p className="text-sm text-text-950">{order?.date || "-"}</p>
             </div>
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-2">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-2">
               <p className="text-xs text-text-950 mb-1">Amount</p>
               <p className="text-sm text-text-950">{order?.amount || "-"}</p>
             </div>
 
-            {/* Row 2: 2 items */}
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-3">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-3">
               <p className="text-xs text-text-950 mb-1">Customer Name</p>
               <p className="text-sm text-text-950">{order?.name || "-"}</p>
             </div>
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-3">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-3">
               <p className="text-xs text-text-950 mb-1">Customer Email</p>
-              <p className="text-sm text-text-950">{order?.email || "-"}</p>
+              <p className="text-sm text-text-950 break-all">{order?.email || "-"}</p>
             </div>
 
-            {/* Row 3: 3 items */}
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-2">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-2">
               <p className="text-xs text-text-950 mb-1">Customer Phone</p>
               <p className="text-sm text-text-950">{orderDetailData?.data?.customerPhone || "-"}</p>
             </div>
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-2">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-2">
               <p className="text-xs text-text-950 mb-1">Payment Status</p>
               <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
                 order?.payment === "Paid" || order?.payment === "Refunded" ? "bg-success-100 text-success-600" :
@@ -113,29 +111,27 @@ export function ViewOrderModal({ open, onOpenChange, order }: ViewOrderModalProp
                 {order?.payment || "-"}
               </div>
             </div>
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-2">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-2">
               <p className="text-xs text-text-950 mb-1">Delivery Type</p>
               <p className="text-sm text-text-950">{orderDetailData?.data?.deliveryType || "-"}</p>
             </div>
 
-            {/* Row 4: 2 items */}
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-3">
+            <div className="bg-text-100 rounded-[16px] p-3 col-span-2 sm:col-span-3">
               <p className="text-xs text-text-950 mb-1">Pickup Location</p>
               <p className="text-sm text-text-950">{orderDetailData?.data?.pickupLocation || "-"}</p>
             </div>
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-3">
+            <div className="bg-text-100 rounded-[16px] p-3 col-span-2 sm:col-span-3">
               <p className="text-xs text-text-950 mb-1">City / State</p>
               <p className="text-sm text-text-950">
                 {orderDetailData?.data?.city ? `${orderDetailData.data.city}, ${orderDetailData.data.state || ""}` : "-"}
               </p>
             </div>
 
-            {/* Row 5: 2 items */}
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-2">
+            <div className="bg-text-100 rounded-[16px] p-3 sm:col-span-2">
               <p className="text-xs text-text-950 mb-1">Landmark</p>
               <p className="text-sm text-text-950">{orderDetailData?.data?.landmark || "-"}</p>
             </div>
-            <div className="bg-text-100 rounded-[16px] p-3 col-span-4">
+            <div className="bg-text-100 rounded-[16px] p-3 col-span-2 sm:col-span-4">
               <p className="text-xs text-text-950 mb-1">Shipping Address</p>
               <p className="text-sm text-text-950">{orderDetailData?.data?.shippingAddress || "-"}</p>
             </div>

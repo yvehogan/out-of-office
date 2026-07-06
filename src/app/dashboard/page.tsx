@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const summary = data?.data;
 
   return (
-    <div className="flex min-h-full w-full flex-col gap-4 px-4">
+    <div className="flex min-h-full w-full flex-col gap-4 px-2 sm:px-4">
       <Header />
       <StoreAnalytics 
         data={summary?.metrics} 

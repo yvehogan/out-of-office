@@ -67,18 +67,18 @@ export function CustomersTable() {
   const TAB_CLASS = "flex-none relative rounded-none border-none data-active:text-text-950 text-[#565F73] hover:text-[#5C00FF] font-medium data-active:font-semibold text-[14px] pb-3 px-0 bg-transparent data-active:bg-transparent data-active:shadow-none transition-all after:h-1! after:rounded-t-[10px]! after:!bg-[#5C00FF] after:!bottom-0 cursor-pointer";
 
   return (
-    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-5 animate-fade-in-up delay-2">
+    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-4 sm:p-5 animate-fade-in-up delay-2">
       {/* Controls */}
-      <div className="flex items-center gap-4 mt-2">
+      <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 mt-2">
         <button
           onClick={() => setSortOrder(prev => prev === "newest" ? "oldest" : "newest")}
-          className="flex items-center gap-2 px-6 py-3 rounded-full border border-[#5C00FF] bg-white text-sm font-semibold text-text-950 hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[#5C00FF] bg-white text-sm font-semibold text-text-950 hover:bg-gray-50 transition-colors w-full sm:w-auto"
         >
           <ListFilter className="h-4 w-4" />
           {sortOrder === "newest" ? "Newest First" : "Oldest First"}
         </button>
 
-        <div className="relative flex-1 max-w-[400px]">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input
             type="text"
@@ -92,7 +92,7 @@ export function CustomersTable() {
         <button
           onClick={handleExport}
           disabled={activeTab !== "waitlists" || isExporting}
-          className="ml-auto flex items-center gap-2 px-6 py-3 rounded-full bg-[#5C00FF] text-white text-sm font-semibold hover:bg-[#5C00FF]/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#5C00FF] text-white text-sm font-semibold hover:bg-[#5C00FF]/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto sm:ml-auto"
         >
           {isExporting ? "Exporting..." : "Export"}
           <Upload className="h-4 w-4" />

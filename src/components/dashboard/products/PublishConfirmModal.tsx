@@ -12,7 +12,7 @@ interface PublishConfirmModalProps {
 export function PublishConfirmModal({ open, onOpenChange, onConfirm, isLoading, actionType = "publish" }: PublishConfirmModalProps) {
   return (
     <Dialog open={open} onOpenChange={!isLoading ? onOpenChange : undefined}>
-      <DialogContent className="max-w-md rounded-[24px] p-8 text-center flex flex-col items-center justify-center gap-6 [&>button]:hidden border-0 outline-none">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-md rounded-[24px] p-8 text-center flex flex-col items-center justify-center gap-6 [&>button]:hidden border-0 outline-none">
         {isLoading ? (
           <div className="py-12 flex flex-col items-center justify-center gap-6">
             <div className="w-24 h-24 relative flex items-center justify-center">

@@ -72,9 +72,9 @@ export function ViewCustomerModal({ open, onOpenChange, customer }: ViewCustomer
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" showCloseButton={false} className="max-w-[800px]! w-[95vw] sm:w-[800px] p-0 flex flex-col border-0 rounded-[24px] overflow-hidden !right-4 !top-4 !bottom-4 !h-[calc(100vh-32px)]">
+      <SheetContent side="right" showCloseButton={false} className="w-full sm:max-w-200! sm:w-200 p-0 flex flex-col border-0 rounded-none sm:rounded-[24px] overflow-hidden sm:right-4! sm:top-4! sm:bottom-4! sm:h-[calc(100vh-32px)]!">
         <SheetTitle className="sr-only">View Customer</SheetTitle>
-        <div className="bg-white rounded-[24px] flex flex-col flex-1 min-h-0 overflow-y-auto scrollbar-hide p-8 shadow-xl">
+        <div className="bg-white rounded-[24px] flex flex-col flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4 sm:p-8 shadow-xl">
           <div className="flex items-center justify-between mb-8 mt-2">
             <h2 className="text-lg font-semibold text-text-900">View Customer</h2>
             <button
@@ -85,7 +85,7 @@ export function ViewCustomerModal({ open, onOpenChange, customer }: ViewCustomer
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div className="bg-text-100 rounded-[16px] p-5">
               <p className="text-xs text-text-950 mb-1">Customer Name</p>
               <p className="text-sm text-text-950">

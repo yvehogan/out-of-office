@@ -61,7 +61,7 @@ export function RevenueChart({ data, period, onPeriodChange }: RevenueChartProps
   const isUp = (data?.trendPercentage || 0) >= 0;
 
   return (
-    <div className="flex-1 bg-white rounded-[24px] border border-[#EEF1F6] p-6 lg:p-4 flex flex-col h-[520px] animate-fade-in-up delay-3">
+    <div className="flex-1 bg-white rounded-[24px] border border-[#EEF1F6] p-4 sm:p-6 lg:p-4 flex flex-col h-100 sm:h-130 animate-fade-in-up delay-3">
       <div className="flex items-start justify-between gap-4 mb-2">
         <div>
           <h3 className="text-base font-semibold tracking-tight text-text-950">

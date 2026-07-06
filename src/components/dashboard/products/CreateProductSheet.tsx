@@ -169,7 +169,7 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-150 sm:w-150 p-0 flex flex-col border-0 rounded-[24px] overflow-hidden !right-4 !top-4 !bottom-4 !h-[calc(100vh-32px)]">
+      <SheetContent side="right" className="w-full sm:w-150 sm:max-w-150 p-0 flex flex-col border-0 rounded-none sm:rounded-[24px] overflow-hidden sm:right-4! sm:top-4! sm:bottom-4! sm:h-[calc(100vh-32px)]!">
         <SheetHeader className="px-6 py-4 flex flex-row items-center justify-between sticky top-0 bg-white z-10">
           <div className="flex items-center gap-3">
             <SheetTitle className="text-lg font-bold text-text-900">

@@ -10,7 +10,7 @@ export default function DashboardLayout({
       <div className="hidden lg:block shrink-0 h-full py-4 pl-4 pr-2">
         <Sidebar />
       </div>
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto py-4 pr-4 pl-2">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto py-4 px-2 lg:pr-4 lg:pl-2">
         {children}
       </div>
     </div>

@@ -97,11 +97,11 @@ export function OrdersTable() {
   };
 
   return (
-    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-5 animate-fade-in-up delay-2">
-      <div className="flex items-center gap-4 mt-2">
+    <div className="flex flex-col gap-6 bg-white rounded-[24px] mt-5 p-4 sm:p-5 animate-fade-in-up delay-2">
+      <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 mt-2">
         <button 
           onClick={() => setIsFilterOpen(true)}
-          className="flex items-center gap-2 px-6 py-3 rounded-full border border-[#5C00FF] bg-white text-sm font-semibold text-text-950 hover:bg-gray-50 transition-colors"
+          className="flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[#5C00FF] bg-white text-sm font-semibold text-text-950 hover:bg-gray-50 transition-colors w-full sm:w-auto"
         >
           <ListFilter className="h-4 w-4" />
           Filter
@@ -110,7 +110,7 @@ export function OrdersTable() {
           )}
         </button>
 
-        <div className="relative flex-1 max-w-[400px]">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input
             type="text"

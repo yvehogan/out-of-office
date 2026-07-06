@@ -71,7 +71,7 @@ export function ProductFilterModal({ initialFilters, onApply }: ProductFilterMod
           <span className="ml-1 w-2 h-2 rounded-full bg-[#5C00FF]" />
         ) : null}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] rounded-[24px] border-none p-0 overflow-hidden shadow-2xl">
+      <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-125 rounded-[24px] border-none p-0 overflow-hidden shadow-2xl">
         <div className="p-6">
           <DialogHeader className="mb-6">
             <DialogTitle className="text-lg font-semibold text-text-950">Filter</DialogTitle>

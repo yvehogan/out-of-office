@@ -46,7 +46,7 @@ export function OrdersFilterModal({ open, onOpenChange, onApply, initialFilters 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] p-0 border-0 rounded-[24px] overflow-hidden gap-0 shadow-lg">
+      <DialogContent className="w-[calc(100vw-2rem)] sm:max-w-125 p-0 border-0 rounded-[24px] overflow-hidden gap-0 shadow-lg">
         <div className="flex items-center justify-between p-6">
           <h2 className="text-lg font-semibold text-text-950">Filter</h2>
           {/* <button
@@ -57,7 +57,7 @@ export function OrdersFilterModal({ open, onOpenChange, onApply, initialFilters 
           </button> */}
         </div>
 
-        <div className="p-6 overflow-y-auto max-h-[60vh]">
+        <div className="p-6 overflow-y-auto max-h-[70vh]">
           {/* Category */}
           <div className="flex flex-col md:flex-row mb-6 border-b border-gray-100 pb-6 gap-4 md:gap-0">
             <div className="w-full md:w-1/3">

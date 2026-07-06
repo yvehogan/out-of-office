@@ -122,7 +122,7 @@ export function ViewProductSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[580px] sm:w-[580px] p-0 flex flex-col border-0 rounded-[24px] overflow-hidden right-4! top-4! bottom-4! h-[calc(100vh-32px)]!"
+        className="w-full sm:w-145 sm:max-w-145 p-0 flex flex-col border-0 rounded-none sm:rounded-[24px] overflow-hidden sm:right-4! sm:top-4! sm:bottom-4! sm:h-[calc(100vh-32px)]!"
       >
         <SheetHeader className="px-6 pt-5 pb-4 flex flex-row items-center justify-between sticky top-0 bg-white z-10 border-b border-gray-100">
           <div>
@@ -183,7 +183,7 @@ export function ViewProductSheet({
 
               {/* --- SIMPLE PRODUCT --- */}
               {!isVariable && (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Product Name"><FieldText value={product?.name || "—"} /></Field>
                   <Field label="Price"><FieldText value={priceDisplay} /></Field>
                   <Field label="Category"><FieldText value={product?.categoryName || "—"} /></Field>
@@ -197,7 +197,7 @@ export function ViewProductSheet({
                   </Field>
                   <Field label="Date Published"><FieldText value={formatDate(dateStr)} /></Field>
                   {product?.catalogueProperties && product.catalogueProperties.length > 0 && (
-                    <div className="col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
+                    <div className="col-span-1 sm:col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
                       <p className="text-xs text-text-600 mb-2">Properties</p>
                       <div className="flex flex-wrap gap-2">
                         {[...product.catalogueProperties]
@@ -215,7 +215,7 @@ export function ViewProductSheet({
 
               {/* --- VARIABLE PRODUCT --- */}
               {isVariable && (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Product Name"><FieldText value={product?.name || "—"} /></Field>
                   <Field label="Price Range"><FieldText value={priceDisplay} /></Field>
                   <Field label="Category"><FieldText value={product?.categoryName || "—"} /></Field>
@@ -232,7 +232,7 @@ export function ViewProductSheet({
                   </Field>
                   <Field label="Date Published"><FieldText value={formatDate(dateStr)} /></Field>
                   {product?.catalogueProperties && product.catalogueProperties.length > 0 && (
-                    <div className="col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
+                    <div className="col-span-1 sm:col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
                       <p className="text-xs text-text-600 mb-3">Variant Options</p>
                       <div className="space-y-3">
                         {[...product.catalogueProperties]
