@@ -135,24 +135,41 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
     const hasAttributes = selectedSizes.length > 0 || selectedColours.length > 0;
     data.append("Type", hasAttributes ? "Variable" : "Simple");
 
-    const attributes = [];
-    const sizesAttr = attributesData?.find(a => a.name === "Sizes" || a.name === "Size");
-    const coloursAttr = attributesData?.find(a => a.name === "Colours" || a.name === "Colour");
+    // Map display labels → API value slugs
+    const SIZE_SLUG_MAP: Record<string, string> = {
+      S: "small", M: "medium", L: "large", XL: "xl", XXL: "2xl",
+    };
+    const COLOUR_SLUG_MAP: Record<string, string> = {
+      White: "white", Black: "black", Red: "red", Blue: "blue", Purple: "purple",
+    };
+
+    // Find parent attributes by slug (handles "sizes"/"size", "colors"/"colours" etc.)
+    const sizesAttr = attributesData?.find(a => /size/i.test(a.slug));
+    const coloursAttr = attributesData?.find(a => /colou?r/i.test(a.slug));
+
+    const resolveValueId = (attr: NonNullable<typeof sizesAttr>, slug: string) =>
+      attr.values.find(v => v.slug.toLowerCase() === slug)?.id ?? null;
+
+    const attributes: { attributeId: string; attributeValueIds: string[] }[] = [];
 
     if (selectedSizes.length > 0 && sizesAttr) {
-      const valueIds = selectedSizes.map(size => {
-        const val = sizesAttr.values.find(v => v.value.toLowerCase() === size.toLowerCase());
-        return val ? val.id : size;
-      });
-      attributes.push({ attributeId: sizesAttr.id, attributeValueIds: valueIds });
+      const valueIds = selectedSizes
+        .map(s => resolveValueId(sizesAttr, SIZE_SLUG_MAP[s] ?? s.toLowerCase()))
+        .filter((id): id is string => id !== null);
+      if (valueIds.length > 0) {
+        attributes.push({ attributeId: sizesAttr.id, attributeValueIds: valueIds });
+      }
     }
+
     if (selectedColours.length > 0 && coloursAttr) {
-      const valueIds = selectedColours.map(colour => {
-        const val = coloursAttr.values.find(v => v.value.toLowerCase() === colour.toLowerCase());
-        return val ? val.id : colour;
-      });
-      attributes.push({ attributeId: coloursAttr.id, attributeValueIds: valueIds });
+      const valueIds = selectedColours
+        .map(c => resolveValueId(coloursAttr, COLOUR_SLUG_MAP[c] ?? c.toLowerCase()))
+        .filter((id): id is string => id !== null);
+      if (valueIds.length > 0) {
+        attributes.push({ attributeId: coloursAttr.id, attributeValueIds: valueIds });
+      }
     }
+
     data.append("AttributeSelectionsJson", attributes.length > 0 ? JSON.stringify(attributes) : "");
     data.append("MetadataJson", "");
 

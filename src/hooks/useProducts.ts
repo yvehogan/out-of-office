@@ -49,11 +49,7 @@ export function useCreateProduct() {
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await api.post("/products", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await api.post("/products", formData);
       return response.data;
     },
     onSuccess: () => {
