@@ -29,8 +29,6 @@ const INITIAL_FORM_DATA = {
 
 export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft, mode = "create", product }: CreateProductSheetProps) {
   const [selectedAttribute, setSelectedAttribute] = useState<string>("");
-  const [isSizesOpen, setIsSizesOpen] = useState(false);
-  const [isColoursOpen, setIsColoursOpen] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedColours, setSelectedColours] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
@@ -70,8 +68,6 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
         setImages([]);
         setExistingImages([]);
         setSelectedAttribute("");
-        setIsSizesOpen(false);
-        setIsColoursOpen(false);
       } else if (product) {
         // Seed basic fields immediately; descriptions + images filled once detail loads
         setFormData({
@@ -330,63 +326,69 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
 
               {selectedAttribute && (
                 <div className="space-y-6 animate-in slide-in-from-top-2 fade-in duration-200">
-                  <div className="relative">
-                    <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Sizes<span className="text-red-500">*</span></label>
-                    <div 
-                      className="w-full h-18 px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
-                      onClick={() => setIsSizesOpen(!isSizesOpen)}
-                    >
-                      <span className={`text-sm font-medium ${selectedSizes.length > 0 ? "text-[#111827]" : "text-[#111827]/50"}`}>
-                        {selectedSizes.length > 0 ? selectedSizes.join(", ") : "Select"}
-                      </span>
-                      {isSizesOpen ? <ChevronUpIcon className="w-5 h-5 text-gray-500 shrink-0" /> : <ChevronDownIcon className="w-5 h-5 text-gray-500 shrink-0" />}
-                    </div>
-                    
-                    {isSizesOpen && (
-                      <div className="mt-3 bg-white rounded-[24px] p-6 shadow-[0px_8px_32px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col gap-5 absolute z-20 w-full left-0 top-full">
-                        {["Small", "Medium", "Large"].map((size) => {
-                          const isSelected = selectedSizes.includes(size);
-                          return (
-                            <div key={size} onClick={() => toggleSize(size)} className="flex items-center gap-4 cursor-pointer group">
-                              <div className="w-5 h-5 rounded-lg border-2 border-[#111827] flex items-center justify-center bg-transparent group-hover:border-[#5C00FF] transition-colors">
-                                <CheckIcon className={`w-3.5 h-3.5 text-[#111827] transition-opacity ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-10"}`} />
-                              </div>
-                              <span className="text-[15px] font-medium text-[#111827]">{size}</span>
-                            </div>
-                          );
-                        })}
+                  {(selectedAttribute === "sizes-colors" || selectedAttribute === "sizes") && (
+                    <div className="relative">
+                      <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Sizes<span className="text-red-500">*</span></label>
+                      <div className="w-full px-5 pt-6 pb-5 rounded-[24px] border border-[#111827] relative bg-transparent">
+                        <div className="flex flex-wrap gap-2">
+                          {["S", "M", "L", "XL", "XXL"].map((size) => {
+                            const isSelected = selectedSizes.includes(size);
+                            return (
+                              <button
+                                key={size}
+                                type="button"
+                                onClick={() => toggleSize(size)}
+                                className={`px-5 py-2 rounded-full text-sm font-semibold border-2 transition-all ${
+                                  isSelected
+                                    ? "bg-[#5C00FF] border-[#5C00FF] text-white"
+                                    : "bg-white border-[#D8D8D9] text-[#111827] hover:border-[#5C00FF] hover:text-[#5C00FF]"
+                                }`}
+                              >
+                                {size}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
-                  <div className="relative mt-8">
-                    <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Colours<span className="text-red-500">*</span></label>
-                    <div 
-                      className="w-full h-[72px] px-5 rounded-[24px] border border-[#111827] flex items-center justify-between relative bg-transparent cursor-pointer"
-                      onClick={() => setIsColoursOpen(!isColoursOpen)}
-                    >
-                      <span className={`text-sm font-medium ${selectedColours.length > 0 ? "text-[#111827]" : "text-[#111827]/50"}`}>
-                        {selectedColours.length > 0 ? selectedColours.join(", ") : "Select"}
-                      </span>
-                      {isColoursOpen ? <ChevronUpIcon className="w-5 h-5 text-gray-500 shrink-0" /> : <ChevronDownIcon className="w-5 h-5 text-gray-500 shrink-0" />}
-                    </div>
-                    
-                    {isColoursOpen && (
-                      <div className="mt-3 bg-white rounded-[24px] p-6 shadow-[0px_8px_32px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col gap-5 absolute z-20 w-full left-0 top-full">
-                        {["Red", "Green", "Purple"].map((color) => {
-                          const isSelected = selectedColours.includes(color);
-                          return (
-                            <div key={color} onClick={() => toggleColour(color)} className="flex items-center gap-4 cursor-pointer group">
-                              <div className="w-5 h-5 rounded-lg border-2 border-[#111827] flex items-center justify-center bg-transparent group-hover:border-[#5C00FF] transition-colors">
-                                <CheckIcon className={`w-3.5 h-3.5 text-[#111827] transition-opacity ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-10"}`} />
-                              </div>
-                              <span className="text-[15px] font-medium text-[#111827]">{color}</span>
-                            </div>
-                          );
-                        })}
+                  {(selectedAttribute === "sizes-colors" || selectedAttribute === "colors") && (
+                    <div className="relative">
+                      <label className="absolute -top-2.5 left-4 px-1 bg-white text-xs text-text-950 z-10">Colours<span className="text-red-500">*</span></label>
+                      <div className="w-full px-5 pt-6 pb-5 rounded-[24px] border border-[#111827] relative bg-transparent">
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            { name: "White", hex: "#FFFFFF" },
+                            { name: "Black", hex: "#000000" },
+                            { name: "Red", hex: "#EF4444" },
+                            { name: "Blue", hex: "#3B82F6" },
+                            { name: "Purple", hex: "#A855F7" },
+                          ].map(({ name, hex }) => {
+                            const isSelected = selectedColours.includes(name);
+                            return (
+                              <button
+                                key={name}
+                                type="button"
+                                onClick={() => toggleColour(name)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all ${
+                                  isSelected
+                                    ? "border-[#5C00FF] bg-purple-50 text-[#5C00FF]"
+                                    : "border-[#D8D8D9] bg-white text-[#111827] hover:border-[#5C00FF] hover:text-[#5C00FF]"
+                                }`}
+                              >
+                                <span
+                                  className="w-3.5 h-3.5 rounded-full shrink-0 border border-gray-300"
+                                  style={{ backgroundColor: hex }}
+                                />
+                                {name}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -412,26 +414,4 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
   );
 }
 
-function ChevronDownIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
 
-function ChevronUpIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <polyline points="18 15 12 9 6 15" />
-    </svg>
-  );
-}
-
-function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
