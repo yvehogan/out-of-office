@@ -7,9 +7,6 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL || "/api/v1/",
-  headers: {
-    "Content-Type": "application/json",
-  },
   paramsSerializer: (params: Record<string, unknown>) => {
     const searchParams = new URLSearchParams();
     for (const key in params) {
@@ -29,9 +26,9 @@ api.interceptors.request.use(
     if (token && config.headers) {
       config.headers.set("Authorization", `Bearer ${token}`);
     }
-    // Let the browser set Content-Type (with boundary) for multipart requests
-    if (config.data instanceof FormData) {
-      config.headers.delete("Content-Type");
+    // For FormData, clear Content-Type so the browser sets multipart/form-data with boundary
+    if (config.data instanceof FormData && config.headers) {
+      config.headers["Content-Type"] = undefined;
     }
     return config;
   },

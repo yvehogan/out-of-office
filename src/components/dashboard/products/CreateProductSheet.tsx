@@ -8,6 +8,7 @@ import { useCategories } from "@/hooks/useCategories";
 import { useAttributes } from "@/hooks/useAttributes";
 import { useProductDetail } from "@/hooks/useProducts";
 import { Product } from "@/types";
+import { toast } from "sonner";
 
 interface CreateProductSheetProps {
   open: boolean;
@@ -113,8 +114,17 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
+      const MAX_SIZE = 2 * 1024 * 1024; // 2MB
       const newFiles = Array.from(e.target.files);
-      setImages((prev) => [...prev, ...newFiles]);
+      const oversized = newFiles.filter((f) => f.size > MAX_SIZE);
+      if (oversized.length > 0) {
+        toast.error(`${oversized.length > 1 ? "Some images exceed" : "Image exceeds"} the 2MB limit. Please use smaller files.`);
+      }
+      const valid = newFiles.filter((f) => f.size <= MAX_SIZE);
+      if (valid.length > 0) {
+        setImages((prev) => [...prev, ...valid]);
+      }
+      e.target.value = "";
     }
   };
 
@@ -173,6 +183,12 @@ export function CreateProductSheet({ open, onOpenChange, onPublish, onSaveDraft,
     data.append("AttributeSelectionsJson", attributes.length > 0 ? JSON.stringify(attributes) : "");
     data.append("MetadataJson", "");
 
+    // Preserve existing images (edit mode) — send their IDs so the API keeps them
+    existingImages.forEach((img) => {
+      data.append("ExistingImageIds", img.id);
+    });
+
+    // New file uploads
     images.forEach((img) => {
       data.append("Images", img);
     });

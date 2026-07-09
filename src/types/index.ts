@@ -110,6 +110,21 @@ export interface CatalogueProperty {
   displayOrder: number;
 }
 
+export interface ProductVariant {
+  id: string;
+  sku: string;
+  sellingPrice: number;
+  unitsAvailable: number;
+  unitsSold: number;
+  isActive: boolean;
+  stockStatus: string;
+  attributeValues: {
+    attributeName: string;
+    value: string;
+    slug: string;
+  }[];
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -132,6 +147,11 @@ export interface Product {
   maxVariantPrice?: number | null;
   images?: ProductImage[];
   catalogueProperties?: CatalogueProperty[];
+  variants?: ProductVariant[];
+  attributes?: {
+    name: string;
+    slug: string;
+  }[];
 }
 
 export interface WaitlistEntry {

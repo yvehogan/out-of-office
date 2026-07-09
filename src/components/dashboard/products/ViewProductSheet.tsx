@@ -27,6 +27,14 @@ export interface ProductData {
   maxVariantPrice?: number | null;
   images?: { id: string; url: string }[];
   catalogueProperties?: { label: string; value: string; count: number; displayFormat: string; displayOrder: number }[];
+  attributes?: { name: string; slug: string }[];
+  variants?: {
+    id: string;
+    sku: string;
+    sellingPrice: number;
+    unitsAvailable: number;
+    attributeValues: { value: string }[];
+  }[];
 }
 
 interface ViewProductSheetProps {
@@ -160,7 +168,7 @@ export function ViewProductSheet({
                   allImages.map((img) => (
                     <div
                       key={img.id}
-                      className="shrink-0 w-[160px] h-[160px] border-2 border-dashed border-[#D8D8D9] rounded-[16px] overflow-hidden bg-[#FAFAFA]"
+                      className="shrink-0 w-40 h-40 border-2 border-dashed border-[#D8D8D9] rounded-[16px] overflow-hidden bg-[#FAFAFA]"
                     >
                       <Image
                         src={img.url}
@@ -173,10 +181,10 @@ export function ViewProductSheet({
                   ))
                 ) : (
                   <>
-                    <div className="shrink-0 w-[160px] h-[160px] border-2 border-dashed border-[#D8D8D9] rounded-[16px] bg-[#FAFAFA] flex items-center justify-center">
+                    <div className="shrink-0 w-40 h-40 border-2 border-dashed border-[#D8D8D9] rounded-[16px] bg-[#FAFAFA] flex items-center justify-center">
                       <Image src="/svgs/product1.svg" alt="No image" width={64} height={64} className="object-contain opacity-40" />
                     </div>
-                    <div className="shrink-0 w-[160px] h-[160px] border-2 border-dashed border-[#D8D8D9] rounded-[16px] bg-[#FAFAFA]" />
+                    <div className="shrink-0 w-40 h-40 border-2 border-dashed border-[#D8D8D9] rounded-[16px] bg-[#FAFAFA]" />
                   </>
                 )}
               </div>
@@ -227,28 +235,37 @@ export function ViewProductSheet({
                   <Field label="Units Sold">
                     <FieldText value={product?.unitsSold != null ? Number(product.unitsSold).toLocaleString() : "—"} />
                   </Field>
-                  <Field label="Variants">
-                    <FieldText value={product?.variantCount != null ? `${product.variantCount} variant${product.variantCount !== 1 ? "s" : ""}` : "—"} />
-                  </Field>
                   <Field label="Date Published"><FieldText value={formatDate(dateStr)} /></Field>
-                  {product?.catalogueProperties && product.catalogueProperties.length > 0 && (
+                  {product?.attributes && product.attributes.length > 0 && (
                     <div className="col-span-1 sm:col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
-                      <p className="text-xs text-text-600 mb-3">Variant Options</p>
+                      <p className="text-xs text-text-600 mb-3">Attributes</p>
+                      <div className="flex flex-wrap gap-2">
+                        {product.attributes.map((attr) => (
+                          <span key={attr.slug} className="bg-white border border-gray-200 rounded-full px-3 py-1 text-xs font-medium text-text-950">
+                            {attr.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {product?.variants && product.variants.length > 0 && (
+                    <div className="col-span-1 sm:col-span-2 bg-[#F7F8FA] p-4 rounded-[16px]">
+                      <p className="text-xs text-text-600 mb-3">Variants</p>
                       <div className="space-y-3">
-                        {[...product.catalogueProperties]
-                          .sort((a, b) => a.displayOrder - b.displayOrder)
-                          .map((prop) => (
-                            <div key={prop.label}>
-                              <p className="text-xs font-semibold text-text-700 mb-1.5">{prop.label}</p>
-                              <div className="flex flex-wrap gap-1.5">
-                                {[...new Set(prop.value.split(", ").map((v) => v.trim()).filter(Boolean))].map((val) => (
-                                  <span key={val} className="bg-white border border-gray-200 rounded-full px-3 py-1 text-xs font-medium text-text-950">
-                                    {val}
-                                  </span>
-                                ))}
-                              </div>
+                        {product.variants.map((v) => (
+                          <div key={v.id} className="bg-white border border-gray-100 p-3 rounded-lg shadow-sm flex items-center justify-between">
+                            <div className="flex shadow-none border-0 flex-col gap-1 items-start">
+                               <p className="font-semibold text-sm text-text-950">
+                                {v.attributeValues.map(av => av.value).join(" / ")}
+                              </p>
+                              <span className="text-xs text-text-500">{v.sku}</span>
                             </div>
-                          ))}
+                            <div className="flex flex-col items-end gap-1 border-0 shadow-none">
+                              <span className="font-medium text-sm text-text-950">{formatPrice(v.sellingPrice)}</span>
+                              <span className="text-xs text-text-500">{v.unitsAvailable} in stock</span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}

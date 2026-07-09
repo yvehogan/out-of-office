@@ -62,12 +62,17 @@ export function useCreateProduct() {
 }
 
 interface UpdateProductPayload {
-  name?: string;
-  shortDescription?: string;
-  longDescription?: string;
-  price?: number;
-  categoryId?: string;
-  unitsAvailable?: number;
+  Name: string;
+  ShortDescription: string;
+  LongDescription: string;
+  Price: number;
+  CategoryId: string;
+  UnitsAvailable: number;
+  Status: string;
+  Type: string;
+  ExistingImageIds: string[];
+  AttributeSelectionsJson?: string;
+  MetadataJson?: string;
 }
 
 export function useUpdateProduct() {
@@ -75,7 +80,7 @@ export function useUpdateProduct() {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: UpdateProductPayload }) => {
-      const response = await api.put(`/products/${id}`, data);
+      const response = await api.put(`/products/${id}`, { request: data });
       return response.data;
     },
     onSuccess: () => {
@@ -145,6 +150,30 @@ export function useUnarchiveProduct() {
 interface ProductSummary {
   totalProducts: number;
   outOfStockProducts: number;
+}
+
+export interface UpdateVariantPayload {
+  sku: string;
+  sellingPrice: number;
+  unitsAvailable: number;
+}
+
+export function useUpdateVariant() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ productId, variantId, data }: { productId: string; variantId: string; data: UpdateVariantPayload }) => {
+      const response = await api.put(`/products/${productId}/variants/${variantId}`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["productDetail"] });
+    },
+    onError: (error: unknown) => {
+      toast.error(extractApiError(error));
+    },
+  });
 }
 
 export function useProductSummary() {

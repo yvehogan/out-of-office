@@ -6,6 +6,7 @@ import { CreateProductSheet } from "./CreateProductSheet";
 import { PublishConfirmModal } from "./PublishConfirmModal";
 import { SuccessModal } from "./SuccessModal";
 import { ViewProductSheet } from "./ViewProductSheet";
+import { ConfigureVariantsSheet } from "./ConfigureVariantsSheet";
 import { ChevronDown } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -49,6 +50,7 @@ export function ProductsTable() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeTab, setActiveTab] = useState("published");
   const [isViewSheetOpen, setIsViewSheetOpen] = useState(false);
+  const [isVariantsSheetOpen, setIsVariantsSheetOpen] = useState(false);
   
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -132,13 +134,19 @@ export function ProductsTable() {
       } else if (actionType === "publish_action" && selectedProduct) {
         await publishProductMutation.mutateAsync(selectedProduct.id);
       } else if (actionType === "edit_product" && selectedProduct && pendingFormData) {
+        const existingImageIds = pendingFormData.getAll("ExistingImageIds") as string[];
         const payload = {
-          name: pendingFormData.get("Name") as string,
-          shortDescription: pendingFormData.get("ShortDescription") as string,
-          longDescription: pendingFormData.get("LongDescription") as string,
-          price: Number(pendingFormData.get("Price")),
-          categoryId: pendingFormData.get("CategoryId") as string,
-          unitsAvailable: Number(pendingFormData.get("UnitsAvailable"))
+          Name: pendingFormData.get("Name") as string,
+          ShortDescription: pendingFormData.get("ShortDescription") as string,
+          LongDescription: pendingFormData.get("LongDescription") as string,
+          Price: Number(pendingFormData.get("Price")),
+          CategoryId: pendingFormData.get("CategoryId") as string,
+          UnitsAvailable: Number(pendingFormData.get("UnitsAvailable")),
+          Status: pendingFormData.get("Status") as string,
+          Type: pendingFormData.get("Type") as string,
+          ExistingImageIds: existingImageIds,
+          AttributeSelectionsJson: pendingFormData.get("AttributeSelectionsJson") as string || undefined,
+          MetadataJson: pendingFormData.get("MetadataJson") as string || undefined,
         };
         await updateProductMutation.mutateAsync({ id: selectedProduct.id, data: payload });
       } else if ((actionType === "publish" || actionType === "draft") && pendingFormData) {
@@ -273,7 +281,20 @@ export function ProductsTable() {
                       </TableCell>
                       <TableCell className="text-sm text-text-600 whitespace-nowrap">{product.categoryName}</TableCell>
                       <TableCell className="text-sm text-text-600 whitespace-nowrap">₦{product.price.toLocaleString()}</TableCell>
-                      <TableCell className="text-sm text-text-600 whitespace-nowrap">{product.type}</TableCell>
+                      <TableCell className="text-sm text-text-600 whitespace-nowrap">
+                        {product.type}
+                        {product.type === "Variable" && (product.unitsAvailable === 0 || product.unitsAvailable == null) && (
+                          <button
+                            onClick={() => {
+                              setSelectedProduct(product);
+                              setIsVariantsSheetOpen(true);
+                            }}
+                            className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors cursor-pointer"
+                          >
+                            Add Variants
+                          </button>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <span
                           className={`inline-flex px-2.5 py-1.5 rounded-full text-[10px] font-semibold tracking-wide whitespace-nowrap ${getStatusColor(
@@ -319,6 +340,17 @@ export function ProductsTable() {
                               >
                                 Edit
                               </DropdownMenuItem>
+                              {product.type === "Variable" && (
+                                <DropdownMenuItem 
+                                  onClick={() => {
+                                    setSelectedProduct(product);
+                                    setIsVariantsSheetOpen(true);
+                                  }}
+                                  className="text-sm font-medium text-text-900 cursor-pointer rounded-md py-2 px-3"
+                                >
+                                  Configure Variants
+                                </DropdownMenuItem>
+                              )}
                               <DropdownMenuItem 
                                 onClick={() => handleArchiveClick(product)}
                                 className="text-sm font-medium text-text-900 cursor-pointer rounded-md py-2 px-3 hover:text-red-600"
@@ -389,6 +421,11 @@ export function ProductsTable() {
           setIsSuccessOpen(false);
         }}
         actionType={actionType}
+      />
+      <ConfigureVariantsSheet
+        open={isVariantsSheetOpen}
+        onOpenChange={setIsVariantsSheetOpen}
+        product={selectedProduct}
       />
     </div>
   );
